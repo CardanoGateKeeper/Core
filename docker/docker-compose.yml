@@ -1,0 +1,54 @@
+services:
+
+  # Web Service
+  gatekeeper-web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: gatekeeper-web
+    restart: unless-stopped
+    tty: true
+    networks: [ local-gatekeeper ]
+    volumes:
+      - ../application:/home/gatekeeper/application
+    depends_on:
+      - gatekeeper-mysql
+    ports: [ "8020:80" ]
+
+  # MySQL Service
+  gatekeeper-mysql:
+    image: mysql:8.0
+    container_name: gatekeeper-mysql
+    restart: unless-stopped
+    tty: true
+    networks: [ local-gatekeeper ]
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: gatekeeper
+      MYSQL_USER: gatekeeper
+      MYSQL_PASSWORD: 123456
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+    volumes: [ "mysql:/var/lib/mysql:cached" ]
+    ports: [ "33020:3306" ]
+
+  # Redis Service
+  gatekeeper-redis:
+    container_name: gatekeeper-redis
+    image: redis:6
+    restart: always
+    volumes:
+      - redis:/data
+    networks: [ local-gatekeeper ]
+
+volumes:
+  mysql:
+    driver: local
+  redis:
+
+networks:
+  local-gatekeeper:
+    external: true
