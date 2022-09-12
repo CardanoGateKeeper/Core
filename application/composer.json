@@ -1,5 +1,5 @@
 {
-    "name": "gatekeeper/gatekeeper",
+    "name": "latheesan-k/gatekeeper",
     "type": "project",
     "description": "An open source ticketing solution using Cardano Native Assets. Bridging Web 3.0 to IRL via Blockchain.",
     "keywords": ["gatekeeper", "cardano", "ticketing", "web3", "latheesan kanesamoorthy", "adam dean"],
@@ -26,7 +26,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Constants.php"
+            "app/Constants.php",
+            "app/Helpers.php"
         ]
     },
     "autoload-dev": {
