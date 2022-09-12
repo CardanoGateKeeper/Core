@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
@@ -11,7 +11,7 @@
                             {{ __('Manage Users') }}
                         </div>
                         <div>
-                            <a href="#" class="btn btn-sm btn-primary">
+                            <a href="{{ route('admin.manage-users.add-user') }}" class="btn btn-sm btn-primary">
                                 <i class="fa fa-user-plus"></i>
                                 {{ __('Add User') }}
                             </a>
