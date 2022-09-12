@@ -57,8 +57,15 @@ class UserService
         return $user;
     }
 
-    public function allUsers(): Collection
+    public function allUsers(?string $search = null): Collection
     {
+        if (!empty($search)) {
+            return User::where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhereJsonContains('roles', $search)
+                ->get();
+        }
+
         return User::all();
     }
 }

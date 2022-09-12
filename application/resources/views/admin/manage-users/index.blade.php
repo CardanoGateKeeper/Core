@@ -19,14 +19,30 @@
                     </div>
 
                     <div class="card-body">
+
+                        <form method="get">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                <input type="search" name="search" id="search" value="{{ request()->search ?? '' }}" placeholder="Search users by name, email or roles ..." class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    {{ __('Search') }}
+                                </button>
+                                <a href="{{ route('admin.manage-users.index') }}" class="btn btn-outline-secondary">
+                                    {{ __('Clear') }}
+                                </a>
+                            </div>
+                        </form>
+
                         <table class="table table-bordered table-responsive table-hover table-striped m-0">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Roles</th>
-                                    <th>Created</th>
-                                    <th>Action</th>
+                                    <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Email') }}</th>
+                                    <th>{{ __('Roles') }}</th>
+                                    <th>{{ __('Created') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,7 +61,7 @@
                                                         <span class="badge bg-primary">{{ $role }}</span>
                                                     @endforeach
                                                 @else
-                                                    <span class="badge bg-secondary">Guest</span>
+                                                    <span class="badge bg-secondary">{{ __('Guest') }}</span>
                                                 @endif
                                             </td>
                                             <td>
@@ -54,7 +70,7 @@
                                             <td>
                                                 <a href="{{ route('admin.manage-users.edit', $user->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="fa fa-pencil"></i>
-                                                    Edit
+                                                    {{ __('Edit') }}
                                                 </a>
                                             </td>
                                         </tr>
@@ -62,7 +78,7 @@
                                 @else
                                     <tr>
                                         <td colspan="5" class="text-muted text-center">
-                                            No users were found in the system
+                                            {{ __('No users were found in the system') }}
                                         </td>
                                     </tr>
                                 @endif
@@ -74,3 +90,13 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.getElementById('search').addEventListener('input', (e) => {
+            if (!e.currentTarget.value || !e.currentTarget.value.length) {
+                location.href = '{{ route('admin.manage-users.index') }}';
+            }
+        });
+    </script>
+@endpush

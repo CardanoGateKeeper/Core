@@ -16,9 +16,9 @@ class ManageUsersController extends Controller
         $this->userService = $userService;
     }
 
-    public function index(): Renderable
+    public function index(Request $request): Renderable
     {
-        $allUsers = $this->userService->allUsers();
+        $allUsers = $this->userService->allUsers($request->search ?? null);
 
         return view(
             'admin.manage-users.index',
