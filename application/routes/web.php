@@ -42,6 +42,10 @@ Route::middleware('auth')->group(function() {
 
 });
 
+/**
+ * TODO: Delete me after testing!
+ */
+
 Route::get('test', static function() {
 
     /** @var \App\ThirdParty\CardanoClients\ICardanoClient $cardanoClient */

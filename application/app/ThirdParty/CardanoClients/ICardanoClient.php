@@ -2,8 +2,6 @@
 
 namespace App\ThirdParty\CardanoClients;
 
-use App\Exceptions\AppException;
-
 interface ICardanoClient
 {
     public const HTTP_REQUEST_GET = 'GET';
