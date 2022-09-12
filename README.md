@@ -14,7 +14,7 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 - Run `docker network create --driver bridge local-gatekeeper` (**Only Required First Time Setup**)
 - Clone repo `git clone git@github.com:latheesan-k/GateKeeper.git`
 - Switch to repo dir `cd $HOME/Desktop/GateKeeper`
-- Copy `.env.example` as `.env`
+- Copy `application/.env.example` as `application/.env`
 - Run `make buid` to build & start the containers
 - Application should be running locally at `http://localhost:8020`
 
