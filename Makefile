@@ -57,3 +57,11 @@ stats:
 .PHONY: artisan
 artisan:
 	docker exec -it gatekeeper-web bash -c "php artisan $(COMMAND)"
+
+.PHONY: admin
+admin:
+	docker exec -it gatekeeper-web bash -c "php artisan create:admin"
+
+.PHONY: staff
+staff:
+	docker exec -it gatekeeper-web bash -c "php artisan create:staff"

@@ -33,6 +33,8 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 * `shell` Drop into an interactive shell inside _gatekeeper-web_ container
 * `stats` View the resource usage of all running containers
 * `artisan` Execute Laravel `artisan` command inside _gatekeeper-web_ container
+* `admin` Create a new admin user
+* `staff` Create a new staff user
 
 ## Production Deployment Notes
 * Coming Soon
