@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function() {
         // Manage Users
         Route::prefix('manage-users')->group(function() {
             Route::get('/', [ManageUsersController::class, 'index'])->name('admin.manage-users.index');
+            Route::get('{userId}/edit', [ManageUsersController::class, 'edit'])->name('admin.manage-users.edit');
         });
 
     });

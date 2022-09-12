@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Exceptions\AppException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class UserService
@@ -54,5 +55,10 @@ class UserService
         $user->save();
 
         return $user;
+    }
+
+    public function allUsers(): Collection
+    {
+        return User::all();
     }
 }
