@@ -4,7 +4,7 @@ MAINTAINER Latheesan Kanesamoorthy (https://twitter.com/LatheesanK)
 # Update base system
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y wget curl nano sudo libpng-dev libzip-dev zip unzip
+    apt-get install --no-install-recommends -y wget curl nano sudo libpng-dev libfreetype6-dev libzip-dev zip unzip
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 RUN sudo apt-get install -y nodejs
 
@@ -12,7 +12,9 @@ RUN sudo apt-get install -y nodejs
 RUN pecl install -o -f redis \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis \
-    && docker-php-ext-install -j$(nproc) pcntl zip mysqli pdo_mysql gd bcmath
+    && docker-php-ext-install -j$(nproc) pcntl zip mysqli pdo_mysql bcmath \
+    && docker-php-ext-configure gd --enable-gd --with-freetype \
+    && docker-php-ext-install -j$(nproc) gd
 
 # Configure php & apache
 RUN cp /usr/local/etc/php/php.ini-production php.ini && \

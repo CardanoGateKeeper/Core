@@ -4,6 +4,10 @@
         "dev": "vite",
         "build": "vite build"
     },
+    "dependencies": {
+        "buffer": "^6.0.3",
+        "@emurgo/cardano-message-signing-nodejs": "^1.0.1"
+    },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",
         "axios": "^0.27",
