@@ -13,7 +13,7 @@ services:
       - ../application:/home/gatekeeper/application
     depends_on:
       - gatekeeper-mysql
-    ports: [ "8020:80" ]
+    ports: [ "8020:443" ]
 
   # MySQL Service
   gatekeeper-mysql:

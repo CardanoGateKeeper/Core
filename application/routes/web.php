@@ -41,3 +41,7 @@ Route::middleware('auth')->group(function() {
     });
 
 });
+
+Route::get('test', static function() {
+    return view('test');
+});

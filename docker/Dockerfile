@@ -23,7 +23,7 @@ RUN cp /usr/local/etc/php/php.ini-production php.ini && \
     echo 'ServerName gatekeeper.app' >> /etc/apache2/apache2.conf
 COPY /docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY /docker/gatekeeper.app.conf /etc/apache2/sites-available/gatekeeper.app.conf
-RUN a2enmod rewrite && \
+RUN a2enmod rewrite ssl && \
     a2ensite gatekeeper.app
 
 # Clean-up
@@ -48,4 +48,4 @@ USER gatekeeper
 WORKDIR /home/gatekeeper/application
 
 # Expose apache port
-EXPOSE 80
+EXPOSE 443

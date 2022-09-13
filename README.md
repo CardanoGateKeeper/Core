@@ -16,7 +16,7 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 - Switch to repo dir `cd $HOME/Desktop/GateKeeper`
 - Copy `application/.env.example` as `application/.env`
 - Run `make buid` to build & start the containers
-- Application should be running locally at `http://localhost:8020`
+- Application should be running locally at [**https**://localhost:8020](https://localhost:8020)
 
 > You can connect to the dev mysql instance via host `127.0.0.1` and port `33020`
 > See credentials in [docker/docker-compose.yml](docker/docker-compose.yml)
