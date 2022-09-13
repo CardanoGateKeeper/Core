@@ -8,6 +8,7 @@ up:
 	$(MAKE) composer-install
 	./docker/wait-for-mysql.sh
 	$(MAKE) db-migrate
+	docker exec -it gatekeeper-web bash -c "npm install"
 
 .PHONY: down
 down:

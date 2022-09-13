@@ -30,4 +30,11 @@ class TicketService
 
         return $ticket;
     }
+
+    public function updateTicket(Ticket $ticket, string $signature): void
+    {
+        $ticket->update([
+            'ticketNonce' => Uuid::uuid4()->getBytes(),
+        ]);
+    }
 }
