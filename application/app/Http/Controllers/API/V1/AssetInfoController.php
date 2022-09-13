@@ -5,12 +5,16 @@ namespace App\Http\Controllers\API\V1;
 use Throwable;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Traits\JsonResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
 use App\ThirdParty\CardanoClients\ICardanoClient;
 
-class AssetInfoController extends BaseController
+class AssetInfoController extends Controller
 {
+    use JsonResponseTrait;
+
     private ICardanoClient $cardanoClient;
 
     public function __construct(ICardanoClient $cardanoClient)
@@ -37,7 +41,7 @@ class AssetInfoController extends BaseController
 
         } catch (Throwable $exception) {
 
-            return $this->apiException($exception);
+            return $this->jsonException(trans('Failed to load asset info'), $exception);
 
         }
     }

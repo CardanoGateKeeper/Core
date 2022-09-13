@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     HomeController,
     DashboardController,
     Admin\ManageUsersController,
+    Staff\ScanTicketsController,
 };
 
 Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
@@ -37,7 +38,10 @@ Route::middleware('auth')->group(function() {
 
     // Staff
     Route::prefix('admin')->middleware('staff.only')->group(function() {
-        //
+        Route::prefix('scan-tickets')->group(function() {
+            Route::get('/', [ScanTicketsController::class, 'index'])->name('staff.scan-tickets.index');
+            Route::post('ajax/register-ticket', [ScanTicketsController::class, 'ajaxRegisterTicket'])->name('staff.scan-tickets.ajax.register-ticket');
+        });
     });
 
 });

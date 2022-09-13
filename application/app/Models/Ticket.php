@@ -17,4 +17,8 @@ class Ticket extends Model
         'checkInTime',
         'checkInUser',
     ];
+
+    protected $dates = [
+        'checkInTime',
+    ];
 }

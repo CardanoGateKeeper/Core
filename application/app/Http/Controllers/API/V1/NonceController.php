@@ -12,14 +12,18 @@ use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Color\Color;
 use Illuminate\Http\JsonResponse;
 use Endroid\QrCode\Writer\PngWriter;
+use App\Http\Controllers\Controller;
 use Endroid\QrCode\Encoding\Encoding;
+use App\Http\Traits\JsonResponseTrait;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Symfony\Component\HttpFoundation\Response;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeEnlarge;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 
-class NonceController extends BaseController
+class NonceController extends Controller
 {
+    use JsonResponseTrait;
+
     private TicketService $ticketService;
 
     public function __construct(TicketService $ticketService)
@@ -57,7 +61,7 @@ class NonceController extends BaseController
 
         } catch (Throwable $exception) {
 
-            return $this->apiException($exception);
+            return $this->jsonException(trans('Failed to generate nonce'), $exception);
 
         }
     }
@@ -88,7 +92,7 @@ class NonceController extends BaseController
             }
 
             if (empty($ticket->ticketNonce)) {
-                $this->ticketService->updateTicket($ticket, $request->signature);
+                $this->ticketService->setTicketNonceAndSignature($ticket, $request->signature);
             }
 
             $qrValue = implode('|', [
@@ -104,7 +108,7 @@ class NonceController extends BaseController
 
         } catch (Throwable $exception) {
 
-            return $this->apiException($exception);
+            return $this->jsonException(trans('Failed to validate nonce'), $exception);
 
         }
     }
@@ -136,6 +140,8 @@ class NonceController extends BaseController
             ->setFont(new NotoSans(20))
             ->setTextColor(new Color(0, 0, 0));
 
-        return (new PngWriter())->write($qrCode, null, $label)->getDataUri();
+        return (new PngWriter())
+            ->write($qrCode, null, $label)
+            ->getDataUri();
     }
 }

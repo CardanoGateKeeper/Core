@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Ticket;
+use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
+use App\Models\Ticket;
 
 class TicketService
 {
@@ -31,10 +32,29 @@ class TicketService
         return $ticket;
     }
 
-    public function updateTicket(Ticket $ticket, string $signature): void
+    public function setTicketNonceAndSignature(Ticket $ticket, string $signature): void
     {
         $ticket->update([
             'ticketNonce' => Uuid::uuid4()->getBytes(),
+            'signature' => $signature,
         ]);
+    }
+
+    public function findTicketByQRCode(string $assetId, string $ticketNonce): ?Ticket
+    {
+        return Ticket::where('assetId', $assetId)
+            ->where('ticketNonce', Uuid::fromString($ticketNonce)->getBytes())
+            ->first();
+    }
+
+    public function checkInTicket(Ticket $ticket, int $userId): void
+    {
+        $ticket->fill([
+            'isCheckedIn' => true,
+            'checkInTime' => Carbon::now()->toDateTimeString(),
+            'checkInUser' => $userId,
+        ]);
+
+        $ticket->save();
     }
 }

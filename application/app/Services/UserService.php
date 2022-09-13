@@ -60,6 +60,12 @@ class UserService
             ->first();
     }
 
+    public function findByEmail(string $userEmail): ?User
+    {
+        return User::where('email', $userEmail)
+            ->first();
+    }
+
     /**
      * @throws AppException
      * @throws ValidationException
@@ -68,7 +74,7 @@ class UserService
     {
         $user = null;
         if (!empty($payload['user_id']) && !$user = $this->findById($payload['user_id'])) {
-            throw new AppException('User not found');
+            throw new AppException(trans('User not found'));
         }
 
         $validationRules = [
@@ -98,6 +104,31 @@ class UserService
             $validPayload['roles'] = [];
         }
         $user->fill($validPayload);
+        $user->save();
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function changePassword(User $user, string $newAccountPassword): void
+    {
+        $validator = Validator::make(
+            ['password' => $newAccountPassword],
+            ['password' => $this->passwordRules()],
+        );
+
+        if ($validator->fails()) {
+            throw new AppException(sprintf(
+                '%s: %s',
+                trans('validation errors'),
+                implode(' ', $validator->errors()->all())
+            ));
+        }
+
+        $user->fill([
+            'password' => $newAccountPassword,
+        ]);
+
         $user->save();
     }
 
