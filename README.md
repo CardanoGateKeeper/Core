@@ -35,6 +35,7 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 * `artisan` Execute Laravel `artisan` command inside _gatekeeper-web_ container
 * `admin` Create a new admin user
 * `staff` Create a new staff user
+* `change-password` Change user account password 
 
 ## Production Deployment Notes
 * Coming Soon

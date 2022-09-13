@@ -66,3 +66,7 @@ admin:
 .PHONY: staff
 staff:
 	docker exec -it gatekeeper-web bash -c "php artisan create:staff"
+
+.PHONY: change-password
+change-password:
+	docker exec -it gatekeeper-web bash -c "php artisan change:password"

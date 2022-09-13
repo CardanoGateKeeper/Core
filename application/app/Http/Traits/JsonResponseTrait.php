@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API\V1;
+namespace App\Http\Traits;
 
 use Throwable;
 use App\Exceptions\AppException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
-abstract class BaseController extends Controller
+trait JsonResponseTrait
 {
     public function successResponse(mixed $data, int $statusCode = 200): JsonResponse
     {
@@ -22,10 +21,10 @@ abstract class BaseController extends Controller
         return $this->response(['error' => $data], $statusCode);
     }
 
-    public function apiException(Throwable $exception): JsonResponse
+    public function jsonException(string $errorReason, Throwable $exception): JsonResponse
     {
         if (!$exception instanceof AppException && !$exception instanceof ValidationException) {
-            Log::error('API Error', [
+            Log::error($errorReason, [
                 'error' => $exception->getMessage(),
                 'file' => basename($exception->getFile()),
                 'line' => $exception->getLine(),
@@ -41,7 +40,7 @@ abstract class BaseController extends Controller
 
         return $this->errorResponse($exception instanceof AppException
             ? $exception->getMessage()
-            : 'Internal Server Error'
+            : $errorReason
         );
     }
 

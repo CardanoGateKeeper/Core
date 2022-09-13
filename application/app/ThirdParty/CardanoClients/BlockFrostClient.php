@@ -69,7 +69,7 @@ class BlockFrostClient implements ICardanoClient
         curl_close($curl);
 
         if (isset($response['error']) && (int) $response['status_code'] !== Response::HTTP_NOT_FOUND) {
-            $error = 'BlockFrost api error';
+            $error = trans('BlockFrost api error');
 
             Log::error($error, [
                 'request_method' => $requestMethod,

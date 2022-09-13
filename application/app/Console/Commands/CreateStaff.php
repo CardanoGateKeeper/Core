@@ -32,9 +32,9 @@ class CreateStaff extends BaseCommand
 
             $userData = [
                 'roles' => [ ROLE_STAFF ],
-                'name' => $this->ask('Enter account name'),
-                'email' => $this->ask('Enter account email'),
-                'password' => $this->ask('Enter account password'),
+                'name' => $this->ask(trans('Enter account name')),
+                'email' => $this->ask(trans('Enter account email')),
+                'password' => $this->ask(trans('Enter account password')),
             ];
 
             /** @var UserService $userService */
@@ -42,11 +42,11 @@ class CreateStaff extends BaseCommand
 
             $userService->create($userData);
 
-            $this->info('Admin account successfully created');
+            $this->info(trans('Staff account successfully created'));
 
         } catch (Throwable $exception) {
 
-            $this->logError('Failed to create admin user', $exception);
+            $this->logError(trans('Failed to create staff user'), $exception);
 
         }
 
