@@ -87,10 +87,11 @@ class NonceController extends Controller
 
             $request->validate([
                 'event_uuid' => ['required', 'uuid'],
-                'policy_id' => ['required', 'string'],
-                'asset_id' => ['required', 'string'],
-                'stake_key' => ['required', 'string'],
-                'signature' => ['required', 'string'],
+                'policy_id'  => ['required', 'string'],
+                'asset_id'   => ['required', 'string'],
+                'stake_key'  => ['required', 'string'],
+                'signature'  => ['required', 'string'],
+                'key'        => ['required', 'string'],
             ]);
 
             $event = $this->eventService->findByUUID($request->event_uuid);
@@ -110,7 +111,7 @@ class NonceController extends Controller
                 return $this->errorResponse(trans('ticket not found'), Response::HTTP_NOT_FOUND);
             }
 
-            if (!$this->validSignature($ticket->signatureNonce, $request->signature)) {
+            if (!$this->validSignature($request->signature, $request->key, $ticket->signatureNonce, $ticket->stakeKey)) {
                 return $this->errorResponse(trans('invalid signature'), Response::HTTP_BAD_REQUEST);
             }
 
