@@ -30,11 +30,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
+
+        // TODO: This should be selected by staff, i.e. which event they are registering tickets (hardcoded for now)
+        const EVENT_UUID = '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133'; // Example Event
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         $(document).ready(function() {
 
             const $scannerContainer = $('div#scanner-container');
@@ -81,7 +86,11 @@
                         allowOutsideClick: false,
                     });
                     setTimeout(() => {
-                        $.post('{{ route('staff.scan-tickets.ajax.register-ticket') }}', { qr: decodedText }, (response) => {
+                        const ajaxRequest = {
+                            eventUUID: EVENT_UUID,
+                            qr: decodedText,
+                        };
+                        $.post('{{ route('staff.scan-tickets.ajax.register-ticket') }}', ajaxRequest, (response) => {
                             if (response.error) {
                                 showError(response.error);
                             } else if (response.data && response.data.success) {
@@ -129,5 +138,6 @@
             startCamera();
 
         });
+
     </script>
 @endpush

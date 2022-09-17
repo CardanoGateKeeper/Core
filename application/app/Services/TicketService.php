@@ -8,19 +8,21 @@ use App\Models\Ticket;
 
 class TicketService
 {
-    public function findExistingTicket(string $policyId, string $assetId, string $stakeKey): ?Ticket
+    public function findExistingTicket(int $eventId, string $policyId, string $assetId, string $stakeKey): ?Ticket
     {
-        return Ticket::where('policyId', $policyId)
+        return Ticket::where('eventId', $eventId)
+            ->where('policyId', $policyId)
             ->where('assetId', $assetId)
             ->where('stakeKey', $stakeKey)
             ->first();
     }
 
-    public function createNewTicket(string $policyId, string $assetId, string $stakeKey): Ticket
+    public function createNewTicket(int $eventId, string $policyId, string $assetId, string $stakeKey): Ticket
     {
         $ticket = new Ticket;
 
         $ticket->fill([
+            'eventId' => $eventId,
             'policyId' => $policyId,
             'assetId' => $assetId,
             'stakeKey' => $stakeKey,
@@ -40,9 +42,10 @@ class TicketService
         ]);
     }
 
-    public function findTicketByQRCode(string $assetId, string $ticketNonce): ?Ticket
+    public function findTicketByQRCode(int $eventId, string $assetId, string $ticketNonce): ?Ticket
     {
-        return Ticket::where('assetId', $assetId)
+        return Ticket::where('eventId', $eventId)
+            ->where('assetId', $assetId)
             ->where('ticketNonce', Uuid::fromString($ticketNonce)->getBytes())
             ->first();
     }
