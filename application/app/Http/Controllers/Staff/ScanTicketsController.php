@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Services\EventService;
-use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 use Illuminate\Http\Request;
+use App\Services\EventService;
 use App\Services\TicketService;
 use App\Exceptions\AppException;
 use Illuminate\Http\JsonResponse;
