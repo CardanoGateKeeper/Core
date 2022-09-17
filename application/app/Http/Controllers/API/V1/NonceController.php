@@ -7,6 +7,7 @@ use Throwable;
 use Ramsey\Uuid\Uuid;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
+use App\Services\EventService;
 use App\Services\TicketService;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Color\Color;
@@ -24,10 +25,15 @@ class NonceController extends Controller
 {
     use JsonResponseTrait;
 
+    private EventService $eventService;
     private TicketService $ticketService;
 
-    public function __construct(TicketService $ticketService)
+    public function __construct(
+        EventService $eventService,
+        TicketService $ticketService
+    )
     {
+        $this->eventService = $eventService;
         $this->ticketService = $ticketService;
     }
 
@@ -36,12 +42,20 @@ class NonceController extends Controller
         try {
 
             $request->validate([
-                'policy_id' => ['required'],
-                'asset_id' => ['required'],
-                'stake_key' => ['required'],
+                'event_uuid' => ['required', 'uuid'],
+                'policy_id' => ['required', 'string'],
+                'asset_id' => ['required', 'string'],
+                'stake_key' => ['required', 'string'],
             ]);
 
+            $event = $this->eventService->findByUUID($request->event_uuid);
+
+            if (!$event) {
+                return $this->errorResponse(trans('event not found'), Response::HTTP_NOT_FOUND);
+            }
+
             $ticket = $this->ticketService->findExistingTicket(
+                $event->id,
                 $request->policy_id,
                 $request->asset_id,
                 $request->stake_key,
@@ -49,6 +63,7 @@ class NonceController extends Controller
 
             if (!$ticket) {
                 $ticket = $this->ticketService->createNewTicket(
+                    $event->id,
                     $request->policy_id,
                     $request->asset_id,
                     $request->stake_key,
@@ -71,13 +86,21 @@ class NonceController extends Controller
         try {
 
             $request->validate([
-                'policy_id' => ['required'],
-                'asset_id' => ['required'],
-                'stake_key' => ['required'],
-                'signature' => ['required'],
+                'event_uuid' => ['required', 'uuid'],
+                'policy_id' => ['required', 'string'],
+                'asset_id' => ['required', 'string'],
+                'stake_key' => ['required', 'string'],
+                'signature' => ['required', 'string'],
             ]);
 
+            $event = $this->eventService->findByUUID($request->event_uuid);
+
+            if (!$event) {
+                return $this->errorResponse(trans('event not found'), Response::HTTP_NOT_FOUND);
+            }
+
             $ticket = $this->ticketService->findExistingTicket(
+                $event->id,
                 $request->policy_id,
                 $request->asset_id,
                 $request->stake_key,

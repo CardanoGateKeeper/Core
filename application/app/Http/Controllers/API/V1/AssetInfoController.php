@@ -22,12 +22,12 @@ class AssetInfoController extends Controller
         $this->cardanoClient = $cardanoClient;
     }
 
-    public function index(Request $request): JsonResponse
+    public function assetInfo(Request $request): JsonResponse
     {
         try {
 
             $request->validate([
-                'asset_id' => ['required'],
+                'asset_id' => ['required', 'string'],
             ]);
 
             $cacheKey = 'asset-info:' . $request->asset_id;
