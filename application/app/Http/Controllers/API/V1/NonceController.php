@@ -137,13 +137,15 @@ class NonceController extends Controller
         }
     }
 
-    private function validSignature(string $signatureNonce, string $signature): bool
+    private function validSignature(string $signature, string $key, string $signatureNonce, string $stakeKey): bool
     {
         return trim(shell_exec(sprintf(
-            'node %s %s %s',
+            'node %s %s %s %s %s',
             resource_path('nodejs/validateNonce.js'),
             $signature,
-            bin2hex(Uuid::fromBytes($signatureNonce)->toString())
+            $key,
+            bin2hex(Uuid::fromBytes($signatureNonce)->toString()),
+                $stakeKey
         ))) === 'true';
     }
 

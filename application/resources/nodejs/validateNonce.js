@@ -29,8 +29,6 @@ const verifyData = (sig_cbor, key, payload, stake_address) => {
 
     const payloadMatches = toHexString(signedSigStruc_verify.payload()) === payload;
 
-    // console.log(walletMatches, payloadMatches, validates);
-
     return walletMatches && payloadMatches && validates;
 }
 
