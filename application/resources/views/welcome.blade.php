@@ -375,11 +375,13 @@
                 const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
                 const stake_bech32 = stake_key.to_bech32('stake');
                 console.log("Did sign?", payload);
-                $.post('api/validateNonce/', {
+                $.post('{{route('api.v1.validate-nonce')}}', {
+                    event_uuid: EVENT_UUID,
                     stake_key: stake_bech32,
                     policy_id: policy_id,
                     asset_id: asset_id,
-                    signature: payload.signature
+                    signature: payload.signature,
+                    key: payload.key
                 }).then(async (response) => {
                     console.log("validateNonce Response:", response);
                     $('#ticketAssetId').val(response.data.assetId);
