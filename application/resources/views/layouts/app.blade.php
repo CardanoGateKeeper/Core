@@ -11,9 +11,28 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body, html {
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        #app {
+            min-height: 100vh;
+        }
+
+        .connect-btn img, .connected-wallet-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .change-wallet {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="d-flex flex-column justify-content-center">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <div class="d-inline-flex justify-content-start align-items-center gap-2">
@@ -77,10 +96,23 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4 flex-fill d-flex flex-column justify-content-center">
             @include('layouts.partials.alerts')
             @yield('content')
         </main>
+        <footer class="bg-secondary">
+            <div class="container text-center py-4 text-white">
+                <p>
+                    Powered by <strong><span class="fas fa-dungeon"></span> GateKeeper</strong>
+                    <a class="link-light" href="https://github.com/latheesan-k/GateKeeper" target="_blank">View on Github <span
+                            class="fa fa-external-link"></span></a>
+                </p>
+                <p class="mb-0">
+                    An open source project created by Adam K. Dean &amp; Latheesan Kanemoorthy and maintained by the Cardano
+                    community with <span class="fa fa-heart text-danger"></span>.
+                </p>
+            </div>
+        </footer>
     </div>
 
     @stack('scripts')

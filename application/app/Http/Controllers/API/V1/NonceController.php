@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1;
 
 use Exception;
 use Throwable;
+use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
@@ -70,8 +71,24 @@ class NonceController extends Controller
                 );
             }
 
+            // Signing canonical CBOR format...
+            /*
+             * {
+             *   "assetId": "tickets.assetId",
+             *   "createdAt": "tickets.created_at",
+             *   "eventId": "event.uuid",
+             *   "eventName": "event.name",
+             *   "policyId": "tickets.policyId",
+             *   "signBy": "tickets.created_at + event.nonceValidFor",
+             *   "stakeKey": "tickets.stakeKey",
+             *   "ticketId": "tickets.signatureNonce",
+             *   "type": "GateKeeperTicket",
+             *   "version": "1.0.0"
+             * }
+             */
+
             return $this->successResponse([
-                'nonce' => bin2hex(Uuid::fromBytes($ticket->signatureNonce)->toString())
+                'nonce' => bin2hex($this->generateSigningJson($event, $ticket))
             ]);
 
         } catch (Throwable $exception) {
@@ -81,16 +98,38 @@ class NonceController extends Controller
         }
     }
 
+    private function generateSigningJson($event, $ticket): string {
+
+        // Change the expiration to use dynamic expiration window from event details...
+        $expires = date('Y-m-d\TH:i:sP', strtotime($ticket->created_at) + 900);
+
+        $data = [
+            "assetId" => $ticket->assetId,
+            "createdAt" => $ticket->created_at->format('Y-m-d\TH:i:sP'),
+            "eventId" => $event->uuid,
+            "eventName" => $event->name,
+            "policyId" => $ticket->policyId,
+            "signBy" => $expires,
+            "stakeKey" => $ticket->stakeKey,
+            "ticketId" => Uuid::fromBytes($ticket->signatureNonce)->toString(),
+            "type" => "GateKeeperTicket",
+            "version" => "1.0.0"
+        ];
+
+        return json_encode($data);
+    }
+
     public function validateNonce(Request $request): JsonResponse
     {
         try {
 
             $request->validate([
                 'event_uuid' => ['required', 'uuid'],
-                'policy_id' => ['required', 'string'],
-                'asset_id' => ['required', 'string'],
-                'stake_key' => ['required', 'string'],
-                'signature' => ['required', 'string'],
+                'policy_id'  => ['required', 'string'],
+                'asset_id'   => ['required', 'string'],
+                'stake_key'  => ['required', 'string'],
+                'signature'  => ['required', 'string'],
+                'key'        => ['required', 'string'],
             ]);
 
             $event = $this->eventService->findByUUID($request->event_uuid);
@@ -110,7 +149,7 @@ class NonceController extends Controller
                 return $this->errorResponse(trans('ticket not found'), Response::HTTP_NOT_FOUND);
             }
 
-            if (!$this->validSignature($ticket->signatureNonce, $request->signature)) {
+            if (!$this->validSignature($request->signature, $request->key, $this->generateSigningJson($event, $ticket), $ticket->stakeKey)) {
                 return $this->errorResponse(trans('invalid signature'), Response::HTTP_BAD_REQUEST);
             }
 
@@ -136,13 +175,15 @@ class NonceController extends Controller
         }
     }
 
-    private function validSignature(string $signatureNonce, string $signature): bool
+    private function validSignature(string $signature, string $key, string $signatureNonce, string $stakeKey): bool
     {
         return trim(shell_exec(sprintf(
-            'node %s %s %s',
+            'node %s %s %s %s %s',
             resource_path('nodejs/validateNonce.js'),
             $signature,
-            bin2hex(Uuid::fromBytes($signatureNonce)->toString())
+            $key,
+            bin2hex($signatureNonce),
+                $stakeKey
         ))) === 'true';
     }
 

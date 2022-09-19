@@ -42,7 +42,7 @@ class ScanTicketsController extends Controller
                 throw new AppException(trans('Invalid request'));
             }
 
-            $event = $this->eventService->findByUUID($request->event_uuid);
+            $event = $this->eventService->findByUUID($request->eventUUID);
 
             if (!$event) {
                 throw new AppException(trans('Event not found'));
