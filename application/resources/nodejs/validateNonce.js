@@ -32,7 +32,6 @@ const verifyData = (sig_cbor, key, payload, stake_address) => {
     return walletMatches && payloadMatches && validates;
 }
 
-
 const args = process.argv.slice(2);
 
 console.log(verifyData(args[0], args[1], args[2], args[3]));

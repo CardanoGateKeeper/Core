@@ -7,22 +7,20 @@
                 <div class="card">
                     <div class="card-header">{{ __('Welcome to GateKeeper') }}</div>
                     <div class="card-body">
-                        <p class="text-center">Connect your wallet to get started...</p>
+                        <p class="text-center">Connect your wallet to get started ...</p>
                         <div id="wallet-section">
                             <div class="connect-wallet">
-                                <div class="wallet-options d-flex flex-row justify-content-center"></div>
+                                <div class="wallet-options row"></div>
                             </div>
                             <div class="change-wallet">
                                 <div class="connected-wallet d-flex flex-row align-items-center justify-content-center mb-4">
-                                    <img class="connected-wallet-icon"/>
+                                    <img class="connected-wallet-icon" alt="" />
                                     <p class="wallet-info mb-0 mx-2">
-                                        <span class="wallet-name text-capitalize"></span> Connected <span
-                                            class="wallet-balance badge bg-info text-white"></span>
+                                        <span class="wallet-name text-capitalize"></span> Connected <span class="wallet-balance badge bg-info text-white"></span>
                                     </p>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm">Change Wallet
-                                    </button>
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm">Change Wallet</button>
                                 </div>
-                                <div id="asset-container" class="row row-cols-3 justify-content-center"></div>
+                                <div id="asset-container" class="row justify-content-center"></div>
                             </div>
                         </div>
                     </div>
@@ -30,8 +28,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -66,6 +63,12 @@
                                     <label for="ticketSecurityCode">Security Code</label>
                                     <input type="text" class="form-control" readonly id="ticketSecurityCode"/>
                                 </div>
+                                <div class="form-group mb-0">
+                                    <button type="button" class="btn btn-primary" onclick="window.print();">
+                                        <i class="fa fa-print"></i>
+                                        Print Ticket
+                                    </button>
+                                </div>
                             </div>
                             <div class="col mb-4">
                                 <img src="" id="ticketQr" alt="Ticket QR Code" class="img img-thumbnail img-fluid"/>
@@ -79,17 +82,10 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
-            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
-          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <script type="text/javascript" src="https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script type="text/javascript" src="https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as CSL from 'https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 
@@ -97,7 +93,7 @@
 
             const EVENT_UUID = '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133';
 
-            const event = await $.get('{{route('api.v1.event-info', '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133')}}');
+            const event = await $.get('{{ route('api.v1.event-info', '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133')}} ');
             const policy_ids = event.data.policyIds;
 
             // 1 = Mainnet, 0 = Testnet
@@ -247,21 +243,28 @@
                     choice_exists = asset_container.find('#' + id).length;
 
                     if (choice_exists === 0 && metadata !== null) {
-                        let asset_slide = `<div class="col mb-4"><div class="card" id="${id}">` +
-                            `<img src="https://cloudflare-ipfs.com/ipfs/${metadata.image.replace('ipfs://', '')}" class="card-img-top" alt="${metadata.name}" />` +
-                            `<div class="card-body"><h5 class="card-title text-center">${metadata.name}</h5></div>` +
-                            `<div class="card-footer text-end">` +
-                            `<button type="button" class="btn btn-generate" data-policy="${asset_details.policy_id}" data-asset="${asset_details.asset_name}">Generate Ticket <span class="fa fa-qrcode"></span></button>` +
-                            `</div></div></div>`;
-                        asset_container.append(asset_slide);
+                        const asset = `
+                            <div class="col-md-3">
+                                <div class="card mb-3" id="${id}">
+                                    <img src="https://cloudflare-ipfs.com/ipfs/${ metadata.image.replace('ipfs://', '') }" class="card-img-top" alt="">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${ metadata.name }</h5>
+                                        <button type="button" class="btn btn-primary col-12 btn-generate" data-policy="${asset_details.policy_id}" data-asset="${asset_details.asset_name}">
+                                            <span class="fa fa-qrcode"></span>
+                                            Generate Ticket
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        asset_container.append(asset);
                     }
-
-
                 }
             }
 
             async function getNFTMeta(asset_id) {
-                return await $.post('{{route('api.v1.asset-info')}}', {
+                return await $.post('{{ route('api.v1.asset-info') }}', {
                     asset_id: asset_id
                 });
             }
@@ -307,33 +310,36 @@
                 let wallet_name = evt.currentTarget.dataset.wallet;
                 let wallet = window.cardano[wallet_name];
 
+                Swal.showLoading();
+
                 try {
                     window.Wallet = await wallet.enable();
+                    if (window.Wallet !== undefined) {
+                        window.Wallet.assets = {};
+                        let connected_img = $('.connected-wallet-icon');
+                        let connected_name = $('.wallet-name');
+                        let connected_bal = $('.wallet-balance');
+
+                        connected_img.attr('src', wallet.icon);
+                        connected_img.attr('alt', wallet.name);
+                        connected_img.attr('title', wallet.name);
+                        connected_name.html(wallet.name);
+
+                        const wallet_balance = await checkContents();
+                        const nfts = await hasNFTs(wallet_balance);
+
+                        connected_bal.html(`${Object.keys(nfts).length} eligible assets found`)
+
+                        connector_section.hide();
+                        wallet_connected.show();
+
+                        metaCycle = setInterval(fetchMetadata, 2000);
+                    }
                 } catch (err) {
-                    return;
+                    showError(err.message || 'Failed to connect to wallet')
                 }
 
-                if (window.Wallet !== undefined) {
-                    window.Wallet.assets = {};
-                    let connected_img = $('.connected-wallet-icon');
-                    let connected_name = $('.wallet-name');
-                    let connected_bal = $('.wallet-balance');
-
-                    connected_img.attr('src', wallet.icon);
-                    connected_img.attr('alt', wallet.name);
-                    connected_img.attr('title', wallet.name);
-                    connected_name.html(wallet.name);
-
-                    const wallet_balance = await checkContents();
-                    const nfts = await hasNFTs(wallet_balance);
-
-                    connected_bal.html(`${Object.keys(nfts).length} eligible assets found`)
-
-                    connector_section.hide();
-                    wallet_connected.show();
-
-                    metaCycle = setInterval(fetchMetadata, 2000);
-                }
+                Swal.close();
             }
 
             function changeWallet() {
@@ -434,9 +440,13 @@
                             return;
                         }
 
-                        let btn = `<button type="button" class="btn connect-btn mx-2" data-wallet="${wallet}">` +
-                            `<img src="${window.cardano[wallet].icon}" alt="${window.cardano[wallet].name}" class="img-fluid" />` +
-                            `</button>`;
+                        const btn = `
+                            <div class="col text-center">
+                                <button type="button" class="btn connect-btn" data-wallet="${wallet}">
+                                    <img src="${window.cardano[wallet].icon}" alt="${window.cardano[wallet].name}" />
+                                </button>
+                            </div>
+                        `;
 
                         wallet_holder.append(btn);
                         window.Wallets.push(wallet);
@@ -452,5 +462,4 @@
 
         })(jQuery);
     </script>
-
 @endpush

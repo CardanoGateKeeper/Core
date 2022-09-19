@@ -47,9 +47,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
+                    <ul class="navbar-nav me-auto"></ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
@@ -102,14 +100,15 @@
         </main>
         <footer class="bg-secondary">
             <div class="container text-center py-4 text-white">
-                <p>
-                    Powered by <strong><span class="fas fa-dungeon"></span> GateKeeper</strong>
-                    <a class="link-light" href="https://github.com/latheesan-k/GateKeeper" target="_blank">View on Github <span
-                            class="fa fa-external-link"></span></a>
+                <p class="d-flex justify-content-center align-content-center gap-2">
+                    Powered by <strong>GateKeeper</strong>
+                    <a class="link-light" href="https://github.com/latheesan-k/GateKeeper" target="_blank">
+                        View on Github
+                    </a>
                 </p>
                 <p class="mb-0">
-                    An open source project created by Adam K. Dean &amp; Latheesan Kanemoorthy and maintained by the Cardano
-                    community with <span class="fa fa-heart text-danger"></span>.
+                    An open source project created by Adam K. Dean &amp; Latheesan Kanesamoorthy and
+                    maintained by the Cardano community with <span class="fa fa-heart text-danger"></span>
                 </p>
             </div>
         </footer>
