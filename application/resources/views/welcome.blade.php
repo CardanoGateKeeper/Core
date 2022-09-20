@@ -133,6 +133,7 @@
             window.Wallets = [];
 
             // Utility Functions Start
+
             function arrayToString(array) {
                 var out, i, len, c;
                 var char2, char3;
@@ -181,9 +182,7 @@
             function toUint8Array(cbor) {
                 return Uint8Array.from(Buffer.Buffer.from(cbor, 'hex'));
             }
-            // Utility Functions End
 
-            // Messaging Functions Start
             const showError = (message) => {
                 Swal.fire({
                     icon: 'error',
@@ -194,18 +193,13 @@
                 });
             };
 
-            const showSuccess = (message) => {
-                Swal.fire({
-                    icon: 'success',
-                    html: `<span class="text-success">${message}</span>`,
-                    showConfirmButton: true,
-                    confirmButtonText: 'Okay',
-                    allowOutsideClick: false,
-                });
-            };
-            // Messaging Functions End
+            // Utility Functions End
 
             async function fetchMetadata() {
+                if (!window.Wallet.assets) {
+                    return;
+                }
+
                 let i = 0;
 
                 for (const [id, details] of Object.entries(window.Wallet.assets)) {
@@ -346,59 +340,72 @@
                 window.Wallet = undefined;
                 wallet_connected.hide();
                 connector_section.show();
+                asset_container.html('');
             }
 
             async function generateTicket(evt) {
-                const reward_addresses = await window.Wallet.getRewardAddresses();
-                const stake_address_cbor = reward_addresses[0];
-                const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
-                const stake_bech32 = stake_key.to_bech32('stake');
+                Swal.showLoading();
 
-                // TODO: Insert recaptcha here to prevent API abuse!!!
-                const policy_id = evt.currentTarget.dataset.policy;
-                const asset_id = evt.currentTarget.dataset.asset;
+                try {
+                    const reward_addresses = await window.Wallet.getRewardAddresses();
+                    const stake_address_cbor = reward_addresses[0];
+                    const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
+                    const stake_bech32 = stake_key.to_bech32('stake');
 
-                $.post('{{route('api.v1.generate-nonce')}}', {
-                    event_uuid: EVENT_UUID,
-                    stake_key: stake_bech32,
-                    policy_id: policy_id,
-                    asset_id: asset_id
-                }).then(async (response) => {
-                    // console.log("getNonce Response:", data);
-                    if (response.data.nonce) {
-                        await signNonce(stake_address_cbor, response.data.nonce, policy_id, asset_id);
-                    }
-                }).fail((err) => {
-                    // 404 or 500 error for some reason here...
-                    console.error(err);
-                    showError("Sorry, we've encountered an unexpected error!");
-                });
+                    // TODO: Insert recaptcha here to prevent API abuse!!!
+                    const policy_id = evt.currentTarget.dataset.policy;
+                    const asset_id = evt.currentTarget.dataset.asset;
 
+                    $.post('{{route('api.v1.generate-nonce')}}', {
+                        event_uuid: EVENT_UUID,
+                        stake_key: stake_bech32,
+                        policy_id: policy_id,
+                        asset_id: asset_id
+                    }).then(async (response) => {
+                        if (response.data.nonce) {
+                            await signNonce(stake_address_cbor, response.data.nonce, policy_id, asset_id);
+                        }
+                    }).fail((err) => {
+                        // 404 or 500 error for some reason here...
+                        console.error(err);
+                        showError("Sorry, we've encountered an unexpected error!");
+                    });
+                } catch (err) {
+                    showError(err.message || 'Failed to generate ticket');
+                }
+
+                Swal.close();
             }
 
             async function signNonce(stake_address_cbor, nonce, policy_id, asset_id) {
-                const payload = await window.Wallet.signData(stake_address_cbor, nonce);
-                const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
-                const stake_bech32 = stake_key.to_bech32('stake');
-                console.log("Did sign?", payload);
-                $.post('{{route('api.v1.validate-nonce')}}', {
-                    event_uuid: EVENT_UUID,
-                    stake_key: stake_bech32,
-                    policy_id: policy_id,
-                    asset_id: asset_id,
-                    signature: payload.signature,
-                    key: payload.key
-                }).then(async (response) => {
-                    console.log("validateNonce Response:", response);
-                    $('#ticketAssetId').val(response.data.assetId);
-                    $('#ticketSecurityCode').val(response.data.securityCode);
-                    $('#ticketQr').attr('src', response.data.qr);
-                    $('#TicketModal').modal('show');
-                }).fail((err) => {
-                    // 404 or 500 error for some reason here...
-                    console.error(err);
-                    showError("Sorry, there was an error signing the request!");
-                });
+                Swal.showLoading();
+
+                try {
+                    const payload = await window.Wallet.signData(stake_address_cbor, nonce);
+                    const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
+                    const stake_bech32 = stake_key.to_bech32('stake');
+                    $.post('{{route('api.v1.validate-nonce')}}', {
+                        event_uuid: EVENT_UUID,
+                        stake_key: stake_bech32,
+                        policy_id: policy_id,
+                        asset_id: asset_id,
+                        signature: payload.signature,
+                        key: payload.key
+                    }).then(async (response) => {
+                        $('#ticketAssetId').val(response.data.assetId);
+                        $('#ticketSecurityCode').val(response.data.securityCode);
+                        $('#ticketQr').attr('src', response.data.qr);
+                        $('#TicketModal').modal('show');
+                    }).fail((err) => {
+                        // 404 or 500 error for some reason here...
+                        console.error(err);
+                        showError("Sorry, there was an error signing the request!");
+                    });
+                } catch (err) {
+                    showError(err.message || 'Failed to capture signature');
+                }
+
+                Swal.close();
             }
 
             async function run() {
