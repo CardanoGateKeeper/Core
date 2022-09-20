@@ -14,6 +14,7 @@ class Event extends Model
         'uuid',
         'name',
         'policyIds',
+        'nonceValidForMinutes',
     ];
 
     /**

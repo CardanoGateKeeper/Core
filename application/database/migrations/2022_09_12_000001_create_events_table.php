@@ -19,6 +19,7 @@ return new class extends Migration
             $table->uuid();
             $table->string('name');
             $table->json('policyIds');
+            $table->unsignedInteger('nonceValidForMinutes');
             $table->timestamps();
         });
 
@@ -30,6 +31,7 @@ return new class extends Migration
             'policyIds' => [
                 '5fa72fbeecbe80a3e15de1cacab54ba5e310e2c36ae85351132ed4ad',
             ],
+            'nonceValidForMinutes' => 15,
         ]);
         $exampleEvent->save();
     }

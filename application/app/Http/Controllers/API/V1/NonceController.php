@@ -102,7 +102,12 @@ class NonceController extends Controller
      */
     private function generateSigningJson(Event $event, Ticket $ticket): string
     {
-        $signBy = $ticket->created_at->clone()->addMinutes(15)->format(ATOM_DATE_TIME_FORMAT);
+        $signBy = $ticket
+            ->created_at
+            ->clone()
+            ->addMinutes($event->nonceValidForMinutes)
+            ->format(ATOM_DATE_TIME_FORMAT)
+        ;
 
         return json_encode([
             'assetId' => $ticket->assetId,
