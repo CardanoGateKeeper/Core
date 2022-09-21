@@ -15,6 +15,9 @@ class Event extends Model
         'name',
         'policyIds',
         'nonceValidForMinutes',
+        'hodlAsset',
+        'startDateTime',
+        'endDateTime',
     ];
 
     /**
@@ -24,5 +27,15 @@ class Event extends Model
      */
     protected $casts = [
         'policyIds' => Json::class,
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $dates = [
+        'startDateTime',
+        'endDateTime',
     ];
 }

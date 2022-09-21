@@ -14,7 +14,9 @@ class TicketService
             ->where('policyId', $policyId)
             ->where('assetId', $assetId)
             ->where('stakeKey', $stakeKey)
-            ->first();
+            ->latest('id')
+            ->first()
+        ;
     }
 
     public function createNewTicket(int $eventId, string $policyId, string $assetId, string $stakeKey): Ticket
@@ -40,6 +42,16 @@ class TicketService
             'ticketNonce' => Uuid::uuid4()->getBytes(),
             'signature' => $signature,
         ]);
+    }
+
+    public function removeOldAttempts(Ticket $currentValidTicket): void
+    {
+        Ticket::query()
+            ->where('eventId', $currentValidTicket->eventId)
+            ->where('policyId', $currentValidTicket->policyId)
+            ->where('assetId', $currentValidTicket->assetId)
+            ->where('id', '<>', $currentValidTicket->id)
+            ->delete();
     }
 
     public function findTicketByQRCode(int $eventId, string $assetId, string $ticketNonce): ?Ticket

@@ -255,6 +255,8 @@
                         asset_container.append(asset);
                     }
                 }
+
+                Swal.close();
             }
 
             async function getNFTMeta(asset_id) {
@@ -332,8 +334,6 @@
                 } catch (err) {
                     showError(err.message || 'Failed to connect to wallet')
                 }
-
-                Swal.close();
             }
 
             function changeWallet() {
@@ -365,11 +365,7 @@
                         if (response.data.nonce) {
                             await signNonce(stake_address_cbor, response.data.nonce, policy_id, asset_id);
                         }
-                    }).fail((err) => {
-                        // 404 or 500 error for some reason here...
-                        console.error(err);
-                        showError("Sorry, we've encountered an unexpected error!");
-                    });
+                    }).fail(err => showError(err.responseJSON.error || "Sorry, we've encountered an unexpected error!"));
                 } catch (err) {
                     showError(err.message || 'Failed to generate ticket');
                 }
@@ -396,11 +392,7 @@
                         $('#ticketSecurityCode').val(response.data.securityCode);
                         $('#ticketQr').attr('src', response.data.qr);
                         $('#TicketModal').modal('show');
-                    }).fail((err) => {
-                        // 404 or 500 error for some reason here...
-                        console.error(err);
-                        showError("Sorry, there was an error signing the request!");
-                    });
+                    }).fail(err => showError(err.responseJSON.error || "Sorry, there was an error signing the request!"));
                 } catch (err) {
                     showError(err.message || 'Failed to capture signature');
                 }
