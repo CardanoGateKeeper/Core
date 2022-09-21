@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -19,10 +20,15 @@ return new class extends Migration
             $table->uuid();
             $table->string('name');
             $table->json('policyIds');
+            $table->unsignedInteger('nonceValidForMinutes');
+            $table->boolean('hodlAsset')->default(false);
+            $table->dateTime('startDateTime')->nullable();
+            $table->dateTime('endDateTime');
             $table->timestamps();
         });
 
         // Seed an example event
+        $now = Carbon::now();
         $exampleEvent = new Event;
         $exampleEvent->fill([
             'uuid' => '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133', // UUID v4
@@ -30,6 +36,10 @@ return new class extends Migration
             'policyIds' => [
                 '5fa72fbeecbe80a3e15de1cacab54ba5e310e2c36ae85351132ed4ad',
             ],
+            'nonceValidForMinutes' => 15,
+            'hodlAsset' => false,
+            'startDateTime' => $now->toDateTimeString(),
+            'endDateTime' => $now->clone()->addDays(30)->toDateTimeString(),
         ]);
         $exampleEvent->save();
     }

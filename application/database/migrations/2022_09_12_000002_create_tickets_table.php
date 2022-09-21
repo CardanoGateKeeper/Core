@@ -27,7 +27,6 @@ return new class extends Migration
             $table->dateTime('checkInTime')->nullable();
             $table->unsignedBigInteger('checkInUser')->index()->nullable();
             $table->foreign('checkInUser')->references('id')->on('users');
-            $table->unique(['eventId', 'stakeKey', 'policyId', 'assetId']);
             $table->timestamps();
         });
     }

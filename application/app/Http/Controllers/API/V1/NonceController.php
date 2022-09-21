@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Exceptions\AppException;
 use Exception;
 use Throwable;
 use Carbon\Carbon;
+use App\Models\Event;
 use Ramsey\Uuid\Uuid;
+use App\Models\Ticket;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
 use App\Services\EventService;
@@ -52,8 +55,10 @@ class NonceController extends Controller
             $event = $this->eventService->findByUUID($request->event_uuid);
 
             if (!$event) {
-                return $this->errorResponse(trans('event not found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(trans('Event not found'), Response::HTTP_NOT_FOUND);
             }
+
+            $this->ensureEventIsActive($event);
 
             $ticket = $this->ticketService->findExistingTicket(
                 $event->id,
@@ -61,6 +66,20 @@ class NonceController extends Controller
                 $request->asset_id,
                 $request->stake_key,
             );
+
+            if ($ticket && $ticket->isCheckedIn) {
+                return $this->errorResponse(trans(
+                    'Sorry, this asset has already checked in to this event'),
+                    Response::HTTP_BAD_REQUEST,
+                );
+            }
+
+            if ($this->ticketSignByExpired($event, $ticket)) {
+                if (empty($ticket->ticketNonce)) {
+                    $ticket->delete();
+                }
+                $ticket = null;
+            }
 
             if (!$ticket) {
                 $ticket = $this->ticketService->createNewTicket(
@@ -71,24 +90,8 @@ class NonceController extends Controller
                 );
             }
 
-            // Signing canonical CBOR format...
-            /*
-             * {
-             *   "assetId": "tickets.assetId",
-             *   "createdAt": "tickets.created_at",
-             *   "eventId": "event.uuid",
-             *   "eventName": "event.name",
-             *   "policyId": "tickets.policyId",
-             *   "signBy": "tickets.created_at + event.nonceValidFor",
-             *   "stakeKey": "tickets.stakeKey",
-             *   "ticketId": "tickets.signatureNonce",
-             *   "type": "GateKeeperTicket",
-             *   "version": "1.0.0"
-             * }
-             */
-
             return $this->successResponse([
-                'nonce' => bin2hex($this->generateSigningJson($event, $ticket))
+                'nonce' => bin2hex($this->generateSigningJson($event, $ticket)),
             ]);
 
         } catch (Throwable $exception) {
@@ -98,25 +101,73 @@ class NonceController extends Controller
         }
     }
 
-    private function generateSigningJson($event, $ticket): string {
+    /**
+     * @throws AppException
+     */
+    private function ensureEventIsActive(Event $event): void
+    {
+        $now = Carbon::now();
 
-        // Change the expiration to use dynamic expiration window from event details...
-        $expires = date('Y-m-d\TH:i:sP', strtotime($ticket->created_at) + 900);
+        if (!empty($event->startDateTime) && $now->isBefore($event->startDateTime)) {
+            throw new AppException(trans(
+                'Sorry, registration for this event has not started yet <hr> Come back <strong>:tryAgainIn</strong>',
+                [
+                    'tryAgainIn' => $event->startDateTime->diffForHumans(),
+                ],
+            ));
+        }
 
-        $data = [
-            "assetId" => $ticket->assetId,
-            "createdAt" => $ticket->created_at->format('Y-m-d\TH:i:sP'),
-            "eventId" => $event->uuid,
-            "eventName" => $event->name,
-            "policyId" => $ticket->policyId,
-            "signBy" => $expires,
-            "stakeKey" => $ticket->stakeKey,
-            "ticketId" => Uuid::fromBytes($ticket->signatureNonce)->toString(),
-            "type" => "GateKeeperTicket",
-            "version" => "1.0.0"
-        ];
+        if ($now->isAfter($event->endDateTime)) {
+            throw new AppException(trans('Sorry, registration for this event has ended'));
+        }
+    }
 
-        return json_encode($data);
+    private function ticketSignByExpired(Event $event, ?Ticket $ticket = null): bool
+    {
+        return (
+            $ticket &&
+            $ticket->created_at->diffInMinutes(Carbon::now()) > $event->nonceValidForMinutes
+        );
+    }
+
+    /**
+     * Signing canonical JSON -> CBOR format
+     *
+     * {
+     *   "assetId": "tickets.assetId",
+     *   "createdAt": "tickets.created_at(ATOM_DATE_TIME_FORMAT)",
+     *   "eventId": "event.uuid",
+     *   "eventName": "event.name",
+     *   "policyId": "tickets.policyId",
+     *   "signBy": "tickets.created_at + event.nonceValidForMinutes",
+     *   "stakeKey": "tickets.stakeKey",
+     *   "ticketId": "tickets.signatureNonce",
+     *   "type": "GateKeeperTicket",
+     *   "version": "1.0.0"
+     * }
+     * @throws \JsonException
+     */
+    private function generateSigningJson(Event $event, Ticket $ticket): string
+    {
+        $signBy = $ticket
+            ->created_at
+            ->clone()
+            ->addMinutes($event->nonceValidForMinutes)
+            ->format(ATOM_DATE_TIME_FORMAT)
+        ;
+
+        return json_encode([
+            'assetId' => $ticket->assetId,
+            'createdAt' => $ticket->created_at->format(ATOM_DATE_TIME_FORMAT),
+            'eventId' => $event->uuid,
+            'eventName' => $event->name,
+            'policyId' => $ticket->policyId,
+            'signBy' => $signBy,
+            'stakeKey' => $ticket->stakeKey,
+            'ticketId' => Uuid::fromBytes($ticket->signatureNonce)->toString(),
+            'type' => TICKET_TYPE,
+            'version' => TICKET_VERSION
+        ], JSON_THROW_ON_ERROR);
     }
 
     public function validateNonce(Request $request): JsonResponse
@@ -125,18 +176,20 @@ class NonceController extends Controller
 
             $request->validate([
                 'event_uuid' => ['required', 'uuid'],
-                'policy_id'  => ['required', 'string'],
-                'asset_id'   => ['required', 'string'],
-                'stake_key'  => ['required', 'string'],
-                'signature'  => ['required', 'string'],
-                'key'        => ['required', 'string'],
+                'policy_id' => ['required', 'string'],
+                'asset_id' => ['required', 'string'],
+                'stake_key' => ['required', 'string'],
+                'signature' => ['required', 'string'],
+                'key' => ['required', 'string'],
             ]);
 
             $event = $this->eventService->findByUUID($request->event_uuid);
 
             if (!$event) {
-                return $this->errorResponse(trans('event not found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(trans('Event not found'), Response::HTTP_NOT_FOUND);
             }
+
+            $this->ensureEventIsActive($event);
 
             $ticket = $this->ticketService->findExistingTicket(
                 $event->id,
@@ -146,16 +199,25 @@ class NonceController extends Controller
             );
 
             if (!$ticket) {
-                return $this->errorResponse(trans('ticket not found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(trans('Ticket not found'), Response::HTTP_NOT_FOUND);
+            }
+
+            if ($this->ticketSignByExpired($event, $ticket)) {
+                return $this->errorResponse(
+                    trans('Sorry, the signature request expired - please try again'),
+                    Response::HTTP_BAD_REQUEST,
+                );
             }
 
             if (!$this->validSignature($request->signature, $request->key, $this->generateSigningJson($event, $ticket), $ticket->stakeKey)) {
-                return $this->errorResponse(trans('invalid signature'), Response::HTTP_BAD_REQUEST);
+                return $this->errorResponse(trans('Invalid signature'), Response::HTTP_BAD_REQUEST);
             }
 
             if (empty($ticket->ticketNonce)) {
                 $this->ticketService->setTicketNonceAndSignature($ticket, $request->signature);
             }
+
+            $this->ticketService->removeOldAttempts($ticket);
 
             $qrValue = implode('|', [
                 $ticket->assetId,
@@ -183,7 +245,7 @@ class NonceController extends Controller
             $signature,
             $key,
             bin2hex($signatureNonce),
-                $stakeKey
+            $stakeKey
         ))) === 'true';
     }
 
