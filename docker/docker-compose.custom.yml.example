@@ -1,0 +1,14 @@
+services:
+
+  # Web Service
+  gatekeeper-web:
+    ports: [ "8020:443" ]
+
+  # MySQL Service
+  gatekeeper-mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: gatekeeper
+      MYSQL_USER: gatekeeper
+      MYSQL_PASSWORD: 123456
+    ports: [ "33020:3306" ]

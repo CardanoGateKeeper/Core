@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
+use Throwable;
 use App\Models\Event;
 use App\Models\Ticket;
-use Carbon\Carbon;
-use Throwable;
 use Illuminate\Http\Request;
 use App\Services\EventService;
 use App\Services\TicketService;

@@ -15,18 +15,13 @@
                         <div class="alert alert-info">
                             <p>
                                 Please note: for the time being, hardware wallets are not supported due to lack
-                                of support for the
-                                <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">
-                                    Cardano CIP-8 Message Signing
-                                </a>
+                                of support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
                                 standard. We always encourage all users to secure their assets on a hardware wallet
                                 whenever possible for maximum security.
                             </p>
                             <p class="mb-0">
                                 Wallets that do not support the
-                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">
-                                    Cardano CIP-30 dApp-Wallet Bridge
-                                </a>
+                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
                                 standard including Daedalus, Yoroi, and AdaLite are not supported.
                             </p>
                         </div>
@@ -40,11 +35,11 @@
                                     class="connected-wallet d-flex flex-row align-items-center justify-content-center mb-4">
                                     <img class="connected-wallet-icon" alt=""/>
                                     <p class="wallet-info mb-0 mx-2 lead">
-                                        <span class="wallet-name text-capitalize"></span> Connected <span
-                                            class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
+                                        <span class="wallet-name text-capitalize"></span> Connected
+                                        <span class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
-                                            id="change-wallet-button">Change Wallet
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm" id="change-wallet-button">
+                                        Change Wallet
                                     </button>
                                 </div>
                                 <div id="asset-container" class="row justify-content-center"></div>
@@ -55,8 +50,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -110,23 +104,15 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
-            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
-          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-    <script type="text/javascript"
-            src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
-    <script type="text/javascript" src="{!! asset('js/bridge/cardano-dapp-connector-bridge.min.js') !!}"></script>
-    <script type="text/javascript" src="https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/bridge/cardano-dapp-connector-bridge.min.js') }}"></script>
+    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
-        import * as CSL from 'https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
+        import * as CSL from '//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 
         (async function ($) {
 
@@ -166,8 +152,6 @@
             const wallet_connected = $('.change-wallet');
             const asset_container = $('#asset-container');
             const change_wallet_button = $('#change-wallet-button');
-
-            let isDApp = false;
 
             window.Wallet = false;
             window.Wallets = [];
@@ -235,8 +219,8 @@
                     allowOutsideClick: false,
                 });
             };
-
             // Utility Functions End
+
             async function fetchMetadata() {
                 if (!window.Wallet.assets) {
                     return;
@@ -353,7 +337,6 @@
 
                 let wallet_name = evt.currentTarget.dataset.wallet;
                 await connect(wallet_name);
-
             }
 
             async function connect(wallet_name) {
@@ -473,13 +456,11 @@
                                 clearInterval(x);
                                 await connect(walletApi.name);
                                 change_wallet_button.hide();
-
                             }
                         });
 
                         return;
                     }
-
 
                     if (!window.cardano) {
                         retries--;
@@ -521,7 +502,6 @@
                     });
                     retries--;
                 }, 250);
-
             }
 
             $(document).ready(function () {

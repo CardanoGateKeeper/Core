@@ -1,5 +1,5 @@
 export COMPOSE_PROJECT_NAME=gatekeeper
-export COMPOSE_FILE=docker/docker-compose.yml
+export COMPOSE_FILE=docker/docker-compose.yml:docker/docker-compose.custom.yml
 
 .PHONY: up
 up:
