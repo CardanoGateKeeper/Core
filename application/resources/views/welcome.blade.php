@@ -1,24 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
+    <style media="print">
+        #mainContent, #printBtn {
+            display: none;
+        }
+    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card" id="mainContent">
                     <div class="card-header">{{ __('Welcome to GateKeeper') }}</div>
                     <div class="card-body">
-                        <p class="text-center">Connect your wallet to get started ...</p>
+                        <div class="alert alert-info">
+                            <p>
+                                Please note: for the time being, hardware wallets are not supported due to lack
+                                of support for the
+                                <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">
+                                    Cardano CIP-8 Message Signing
+                                </a>
+                                standard. We always encourage all users to secure their assets on a hardware wallet
+                                whenever possible for maximum security.
+                            </p>
+                            <p class="mb-0">
+                                Wallets that do not support the
+                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">
+                                    Cardano CIP-30 dApp-Wallet Bridge
+                                </a>
+                                standard including Daedalus, Yoroi, and AdaLite are not supported.
+                            </p>
+                        </div>
                         <div id="wallet-section">
                             <div class="connect-wallet">
-                                <div class="wallet-options row"></div>
+                                <p class="text-center">Connect your wallet to get started ...</p>
+                                <div class="wallet-options row justify-content-center"></div>
                             </div>
                             <div class="change-wallet">
-                                <div class="connected-wallet d-flex flex-row align-items-center justify-content-center mb-4">
-                                    <img class="connected-wallet-icon" alt="" />
-                                    <p class="wallet-info mb-0 mx-2">
-                                        <span class="wallet-name text-capitalize"></span> Connected <span class="wallet-balance badge bg-info text-white"></span>
+                                <div
+                                    class="connected-wallet d-flex flex-row align-items-center justify-content-center mb-4">
+                                    <img class="connected-wallet-icon" alt=""/>
+                                    <p class="wallet-info mb-0 mx-2 lead">
+                                        <span class="wallet-name text-capitalize"></span> Connected <span
+                                            class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm">Change Wallet</button>
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
+                                            id="change-wallet-button">Change Wallet
+                                    </button>
                                 </div>
                                 <div id="asset-container" class="row justify-content-center"></div>
                             </div>
@@ -28,7 +55,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -41,18 +69,19 @@
                             <div class="col mb-4 text-start">
                                 <div class="alert alert-danger mb-4">
                                     <p>
-                                        Please save the generated QR code shown here to your phone or print it clearly on a
-                                        piece of paper and bring it with you to the event.
+                                        Please save the generated QR code shown here to your phone or print it clearly
+                                        on a piece of paper and bring it with you to the event.
                                     </p>
                                     <p>
-                                        You should never travel to live events with valuable crypto assets on your person
-                                        and NFTs as tickets to events are no exception! Do not share the information on this
-                                        screen with anyone else except for when checking in at the event.
+                                        You should never travel to live events with valuable crypto assets on your
+                                        person and NFTs as tickets to events are no exception! Do not share the
+                                        information on this screen with anyone else except for when checking in at the
+                                        event.
                                     </p>
                                     <p class="mb-0">
                                         Please be aware that you must leave the asset in this same wallet until you have
-                                        checked in to the event. If the asset is moved from your wallet prior to the event
-                                        it will invalidate your ticket, and you will need to regenerate it.
+                                        checked in to the event. If the asset is moved from your wallet prior to the
+                                        event it will invalidate your ticket, and you will need to regenerate it.
                                     </p>
                                 </div>
                                 <div class="form-group mb-4">
@@ -63,10 +92,9 @@
                                     <label for="ticketSecurityCode">Security Code</label>
                                     <input type="text" class="form-control" readonly id="ticketSecurityCode"/>
                                 </div>
-                                <div class="form-group mb-0">
+                                <div class="form-group mb-0" id="printBtn">
                                     <button type="button" class="btn btn-primary" onclick="window.print();">
-                                        <i class="fa fa-print"></i>
-                                        Print Ticket
+                                        <i class="fa fa-print"></i> Print Ticket
                                     </button>
                                 </div>
                             </div>
@@ -82,10 +110,21 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <script type="text/javascript" src="https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
+            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
+          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
+    <script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
+    <script type="text/javascript" src="{!! asset('js/bridge/cardano-dapp-connector-bridge.min.js') !!}"></script>
+    <script type="text/javascript" src="https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as CSL from 'https://cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 
@@ -126,13 +165,17 @@
             const wallet_holder = $('.wallet-options');
             const wallet_connected = $('.change-wallet');
             const asset_container = $('#asset-container');
+            const change_wallet_button = $('#change-wallet-button');
 
-            let metaCycle = undefined;
+            let isDApp = false;
 
             window.Wallet = false;
             window.Wallets = [];
 
             // Utility Functions Start
+            async function delay(ms) {
+                return await new Promise(resolve => setTimeout(resolve, ms));
+            }
 
             function arrayToString(array) {
                 var out, i, len, c;
@@ -194,19 +237,12 @@
             };
 
             // Utility Functions End
-
             async function fetchMetadata() {
                 if (!window.Wallet.assets) {
                     return;
                 }
 
-                let i = 0;
-
                 for (const [id, details] of Object.entries(window.Wallet.assets)) {
-                    if (i >= 10) {
-                        continue;
-                    }
-
                     let choice_exists = asset_container.find(`#${id}`).length;
                     if (choice_exists) {
                         continue;
@@ -221,11 +257,22 @@
                     } else {
                         let meta = JSON.parse(window.localStorage.getItem(id));
                         if (meta === null) {
-                            meta = await getNFTMeta(id);
+                            let ts = performance.now();
+                            meta = await $.post('{{ route('api.v1.asset-info') }}', {
+                                asset_id: id
+                            }).fail(async () => {
+                                await delay(2000);
+                                return fetchMetadata();
+                            });
+                            let te = performance.now();
+                            let delay_t = 600 - (te - ts);
+                            console.log(`Delay_T: ${delay_t}`);
+                            if (delay_t > 0) {
+                                await delay(delay_t);
+                            }
                             asset_details = meta.data;
                             window.localStorage.setItem(id, JSON.stringify(asset_details));
                             metadata = asset_details.onchain_metadata;
-                            i++;
                         }
                         window.Wallet.assets[id] = meta;
                     }
@@ -236,13 +283,20 @@
 
                     choice_exists = asset_container.find('#' + id).length;
 
+                    let shouldLazy = asset_container.find('.col-md-3').length;
+                    let lazy = 'data-';
+                    if (shouldLazy < 12) {
+                        // Don't lazy load the first 12 images...
+                        lazy = '';
+                    }
+
                     if (choice_exists === 0 && metadata !== null) {
                         const asset = `
                             <div class="col-md-3">
                                 <div class="card mb-3" id="${id}">
-                                    <img src="https://cloudflare-ipfs.com/ipfs/${ metadata.image.replace('ipfs://', '') }" class="card-img-top" alt="">
+                                    <img ${lazy}src="https://cloudflare-ipfs.com/ipfs/${metadata.image.replace('ipfs://', '')}" class="card-img-top lazy" alt="">
                                     <div class="card-body">
-                                        <h5 class="card-title">${ metadata.name }</h5>
+                                        <h5 class="card-title">${metadata.name}</h5>
                                         <button type="button" class="btn btn-primary col-12 btn-generate" data-policy="${asset_details.policy_id}" data-asset="${asset_details.asset_name}">
                                             <span class="fa fa-qrcode"></span>
                                             Generate Ticket
@@ -255,14 +309,8 @@
                         asset_container.append(asset);
                     }
                 }
-
+                $('.lazy').Lazy();
                 Swal.close();
-            }
-
-            async function getNFTMeta(asset_id) {
-                return await $.post('{{ route('api.v1.asset-info') }}', {
-                    asset_id: asset_id
-                });
             }
 
             async function checkContents() {
@@ -304,9 +352,17 @@
                 evt.stopPropagation();
 
                 let wallet_name = evt.currentTarget.dataset.wallet;
+                await connect(wallet_name);
+
+            }
+
+            async function connect(wallet_name) {
+                console.log("Connecting to ", wallet_name);
+                Swal.showLoading();
+
                 let wallet = window.cardano[wallet_name];
 
-                Swal.showLoading();
+                console.log(wallet);
 
                 try {
                     window.Wallet = await wallet.enable();
@@ -328,8 +384,7 @@
 
                         connector_section.hide();
                         wallet_connected.show();
-
-                        metaCycle = setInterval(fetchMetadata, 2000);
+                        fetchMetadata();
                     }
                 } catch (err) {
                     showError(err.message || 'Failed to connect to wallet')
@@ -412,6 +467,20 @@
                         return;
                     }
 
+                    if (window.self !== window.top) {
+                        initCardanoDAppConnectorBridge(async (walletApi) => {
+                            if (walletApi.name === 'eternl') {
+                                clearInterval(x);
+                                await connect(walletApi.name);
+                                change_wallet_button.hide();
+
+                            }
+                        });
+
+                        return;
+                    }
+
+
                     if (!window.cardano) {
                         retries--;
                         return;
@@ -440,7 +509,7 @@
                         }
 
                         const btn = `
-                            <div class="col text-center">
+                            <div class="col-auto text-center">
                                 <button type="button" class="btn connect-btn" data-wallet="${wallet}">
                                     <img src="${window.cardano[wallet].icon}" alt="${window.cardano[wallet].name}" />
                                 </button>
