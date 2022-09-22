@@ -13,7 +13,7 @@ services:
       - ../application:/home/gatekeeper/application
     depends_on:
       - gatekeeper-mysql
-    ports: [ "8020:443" ]
+    ports: [ "443:443" ]
 
   # MySQL Service
   gatekeeper-mysql:
@@ -33,7 +33,6 @@ services:
       timeout: 10s
       retries: 30
     volumes: [ "mysql:/var/lib/mysql:cached" ]
-    ports: [ "33020:3306" ]
 
   # Redis Service
   gatekeeper-redis:

@@ -100,15 +100,15 @@
         </main>
         <footer class="bg-secondary">
             <div class="container text-center py-4 text-white">
-                <p class="d-flex justify-content-center align-content-center gap-2">
+                <p class="d-flex justify-content-center align-content-center gap-2 mb-1">
                     Powered by <strong>GateKeeper</strong>
                     <a class="link-light" href="https://github.com/latheesan-k/GateKeeper" target="_blank">
                         View on Github
                     </a>
                 </p>
                 <p class="mb-0">
-                    An open source project created by Adam K. Dean &amp; Latheesan Kanesamoorthy and
-                    maintained by the Cardano community with <span class="fa fa-heart text-danger"></span>
+                    An open source project created by Adam K. Dean &amp; Latheesan Kanesamoorthy.<br />
+                    Maintained by the Cardano community with <span class="fa fa-heart text-danger"></span>
                 </p>
             </div>
         </footer>

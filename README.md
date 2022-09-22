@@ -14,12 +14,12 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 - Run `docker network create --driver bridge local-gatekeeper` (**Only Required First Time Setup**)
 - Clone repo `git clone git@github.com:latheesan-k/GateKeeper.git`
 - Switch to repo dir `cd $HOME/Desktop/GateKeeper`
+- Copy `docker/docker-compose.custom.yml.example` as `docker/docker-compose.custom.yml`
 - Copy `application/.env.example` as `application/.env`
 - Run `make buid` to build & start the containers
 - Application should be running locally at [**https**://localhost:8020](https://localhost:8020)
 
-> You can connect to the dev mysql instance via host `127.0.0.1` and port `33020`
-> See credentials in [docker/docker-compose.yml](docker/docker-compose.yml)
+> You can connect to the dev mysql instance via host `127.0.0.1` and port `33020`, see credentials in `docker/docker-compose.custom.yml`
 
 ## Available Make Commands (Local Development)
 * `build` Rebuild all docker containers
@@ -37,5 +37,10 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 * `staff` Create a new staff user
 * `change-password` Change user account password 
 
-## Production Deployment Notes
-* Coming Soon
+### How To Change Application Port
+* You can change the exposed application port by modifying section of `gatekeeper-web` in `docker/docker-compose.custom.yml`
+
+### How To Change MySQL Credentials
+* You can change the exposed mysql port & database credentials by modifying section of `gatekeeper-mysql` in `docker/docker-compose.custom.yml`
+* Then update the `application/.env` to reflect the new db credentials
+* In production environment, it is _recommended_ to change the database credentials and not expose the mysql ports
