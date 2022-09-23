@@ -16,7 +16,7 @@ class BlockFrostClient implements ICardanoClient
     {
         return $this->call(
             self::HTTP_REQUEST_GET,
-            "assets/{$assetId}"
+            "assets/{$assetId}",
         );
     }
 
@@ -24,25 +24,37 @@ class BlockFrostClient implements ICardanoClient
      * @throws AppException
      * @throws \JsonException
      */
-    private function get(string $requestUri, array $headers = []): ?array
+    public function assetHodled(string $policyId, string $assetId, string $stakeKey): bool
     {
-        return $this->call(self::HTTP_REQUEST_GET, $requestUri, null, $headers);
+        $assetAddresses = $this->call(
+            self::HTTP_REQUEST_GET,
+            "assets/{$policyId}{$assetId}/addresses",
+        );
+
+        if (!count($assetAddresses)) {
+            throw new AppException(trans('Asset not found in any wallets'));
+        }
+
+        $firstAssetAddress = $assetAddresses[0]['address'];
+
+        $addressInfo = $this->call(
+            self::HTTP_REQUEST_GET,
+            "addresses/{$firstAssetAddress}",
+        );
+
+        return $addressInfo['stake_address'] === $stakeKey;
     }
 
     /**
      * @throws AppException
      * @throws \JsonException
      */
-    private function post(string $requestUri, string $payload, array $headers = []): ?array
-    {
-        return $this->call(self::HTTP_REQUEST_POST, $requestUri, $payload, $headers);
-    }
-
-    /**
-     * @throws AppException
-     * @throws \JsonException
-     */
-    private function call(string $requestMethod, string $requestUri, string $payload = null, array $headers = []): ?array
+    private function call(
+        string $requestMethod,
+        string $requestUri,
+        string $payload = null,
+        array $headers = []
+    ): ?array
     {
         $curl = curl_init();
         $options = [
