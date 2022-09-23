@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\ThirdParty\CardanoClients\ICardanoClient;
 use Throwable;
 use App\Models\Event;
 use App\Models\Ticket;
@@ -21,14 +22,17 @@ class ScanTicketsController extends Controller
 
     private EventService $eventService;
     private TicketService $ticketService;
+    private ICardanoClient $cardanoClient;
 
     public function __construct(
         EventService $eventService,
-        TicketService $ticketService
+        TicketService $ticketService,
+        ICardanoClient $cardanoClient,
     )
     {
         $this->eventService = $eventService;
         $this->ticketService = $ticketService;
+        $this->cardanoClient = $cardanoClient;
     }
 
     public function index(): Renderable
@@ -82,21 +86,17 @@ class ScanTicketsController extends Controller
         }
     }
 
+    /**
+     * @throws AppException
+     */
     private function checkAssetHodl(Event $event, Ticket $ticket): void
     {
         if (!$event->hodlAsset) {
             return;
         }
 
-        /**
-         * TODO: Check if the asset on ticket is still in the wallet that signed it
-         * How to implement this
-         *
-         * 1. Get the asset addresses using: https://docs.blockfrost.io/#tag/Cardano-Assets/paths/~1assets~1{asset}~1addresses/get
-         * 2. Get the specific address for value from step 1
-         * 3. Ensure the ticket stakeKey matches stakeAddress from step 2
-         */
-
-        // throw new AppException(trans('Asset not found in wallet'));
+        if (!$this->cardanoClient->assetHodled($ticket->policyId, $ticket->assetId, $ticket->stakeKey)) {
+            throw new AppException(trans('Asset not found in wallet'));
+        }
     }
 }

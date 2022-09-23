@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Exceptions\AppException;
+use App\ThirdParty\CardanoClients\ICardanoClient;
 use Exception;
 use Throwable;
 use Carbon\Carbon;
@@ -15,6 +15,7 @@ use App\Services\EventService;
 use App\Services\TicketService;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Color\Color;
+use App\Exceptions\AppException;
 use Illuminate\Http\JsonResponse;
 use Endroid\QrCode\Writer\PngWriter;
 use App\Http\Controllers\Controller;
@@ -31,14 +32,17 @@ class NonceController extends Controller
 
     private EventService $eventService;
     private TicketService $ticketService;
+    private ICardanoClient $cardanoClient;
 
     public function __construct(
         EventService $eventService,
-        TicketService $ticketService
+        TicketService $ticketService,
+        ICardanoClient $cardanoClient,
     )
     {
         $this->eventService = $eventService;
         $this->ticketService = $ticketService;
+        $this->cardanoClient = $cardanoClient;
     }
 
     public function generateNonce(Request $request): JsonResponse
@@ -55,10 +59,25 @@ class NonceController extends Controller
             $event = $this->eventService->findByUUID($request->event_uuid);
 
             if (!$event) {
-                return $this->errorResponse(trans('Event not found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    trans('Event not found'),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $this->ensureEventIsActive($event);
+
+            if (!$this->cardanoClient->assetHodled($request->policy_id, $request->asset_id, $request->stake_key)) {
+                return $this->errorResponse(
+                    trans(
+                        'Asset :assetName not found in wallet',
+                        [
+                            'assetName' => hex2bin($request->asset_id),
+                        ],
+                    ),
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
 
             $ticket = $this->ticketService->findExistingTicket(
                 $event->id,
@@ -68,8 +87,8 @@ class NonceController extends Controller
             );
 
             if ($ticket && $ticket->isCheckedIn) {
-                return $this->errorResponse(trans(
-                    'Sorry, this asset has already checked in to this event'),
+                return $this->errorResponse(
+                    trans('Sorry, this asset has already checked in to this event'),
                     Response::HTTP_BAD_REQUEST,
                 );
             }
@@ -190,6 +209,18 @@ class NonceController extends Controller
             }
 
             $this->ensureEventIsActive($event);
+
+            if (!$this->cardanoClient->assetHodled($request->policy_id, $request->asset_id, $request->stake_key)) {
+                return $this->errorResponse(
+                    trans(
+                        'Asset :assetName not found in wallet',
+                        [
+                            'assetName' => hex2bin($request->asset_id),
+                        ],
+                    ),
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
 
             $ticket = $this->ticketService->findExistingTicket(
                 $event->id,
