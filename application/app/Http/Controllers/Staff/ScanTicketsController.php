@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\ThirdParty\CardanoClients\ICardanoClient;
 use Throwable;
 use App\Models\Event;
 use App\Models\Ticket;
@@ -15,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\JsonResponseTrait;
 use Illuminate\Contracts\Support\Renderable;
+use App\ThirdParty\CardanoClients\ICardanoClient;
 
 class ScanTicketsController extends Controller
 {
