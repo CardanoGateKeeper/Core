@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     HomeController,
     DashboardController,
+    Account\ProfileController,
     Admin\ManageUsersController,
     Staff\ScanTicketsController,
 };
@@ -22,6 +23,12 @@ Route::middleware('auth')->group(function() {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    // Profile
+    Route::prefix('profile')->group(function() {
+        Route::get('/', [ProfileController::class, 'index'])->name('account.profile');
+        Route::post('update', [ProfileController::class, 'update'])->name('account.profile.update');
+    });
 
     // Admin
     Route::prefix('admin')->middleware('admin.only')->group(function() {
