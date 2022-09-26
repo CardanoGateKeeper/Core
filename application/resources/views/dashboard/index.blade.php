@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-home"></i>
+                    <i class="fa fa-home me-1"></i>
                     {{ __('Dashboard') }}
                 </div>
 

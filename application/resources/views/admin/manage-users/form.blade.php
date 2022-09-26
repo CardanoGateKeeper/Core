@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
-                            <i class="fa fa-users"></i>
+                            <i class="fa fa-users me-1"></i>
                             {{ __('Manage Users') }}
                             /
                             @if ($user)
@@ -18,7 +18,7 @@
                         </div>
                         <div>
                             <a href="{{ route('admin.manage-users.index') }}" class="btn btn-sm btn-primary">
-                                <i class="fa fa-list"></i>
+                                <i class="fa fa-list me-1"></i>
                                 {{ __('List Users') }}
                             </a>
                         </div>

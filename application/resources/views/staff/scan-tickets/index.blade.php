@@ -7,12 +7,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
-                            <i class="fa fa-ticket"></i>
+                            <i class="fa fa-ticket me-1"></i>
                             {{ __('Scan Tickets') }}
                         </div>
                         <div>
                             <a href="{{ route('staff.scan-tickets.index') }}" class="btn btn-sm btn-primary">
-                                <i class="fa fa-refresh"></i>
+                                <i class="fa fa-refresh me-1"></i>
                                 {{ __('Restart Scanner') }}
                             </a>
                         </div>
