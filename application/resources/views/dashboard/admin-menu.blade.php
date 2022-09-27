@@ -2,7 +2,7 @@
     <i class="fa fa-users"></i>
     {{ __('Manage Users') }}
 </a>
-<a href="{{ route('events.index') }}" class="btn btn-lg btn-outline-secondary">
+<a href="{{ route('manage-events.index') }}" class="btn btn-lg btn-outline-secondary">
     <i class="fa fa-ticket"></i>
     {{ __('Manage Event') }}
 </a>

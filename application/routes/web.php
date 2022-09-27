@@ -3,12 +3,14 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\{Admin\ManageEventsController,
+use App\Http\Controllers\{
     HomeController,
     DashboardController,
     Account\ProfileController,
     Admin\ManageUsersController,
-    Staff\ScanTicketsController};
+    Admin\ManageEventsController,
+    Staff\ScanTicketsController
+};
 
 Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
 
@@ -32,8 +34,6 @@ Route::middleware('auth')->group(function() {
     // Admin
     Route::prefix('admin')->middleware('admin.only')->group(function() {
 
-        Route::resource('events', ManageEventsController::class);
-
         // Manage Users
         Route::prefix('manage-users')->group(function() {
             Route::get('/', [ManageUsersController::class, 'index'])->name('admin.manage-users.index');
@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function() {
             Route::get('{userId}/edit', [ManageUsersController::class, 'edit'])->name('admin.manage-users.edit');
             Route::post('save', [ManageUsersController::class, 'save'])->name('admin.manage-users.save');
         });
+
+        // Manage Events
+        Route::resource('admin.manage-events', ManageEventsController::class);
 
     });
 

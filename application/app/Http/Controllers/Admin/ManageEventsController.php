@@ -2,67 +2,94 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\EventService;
 use Throwable;
-use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Renderable;
+use App\Services\EventService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\Support\Renderable;
 
-class ManageEventsController extends Controller {
-
+class ManageEventsController extends Controller
+{
     private EventService $eventService;
 
-    public function __construct(EventService $eventService) {
+    public function __construct(EventService $eventService)
+    {
         $this->eventService = $eventService;
     }
 
-    public function index(): Renderable {
+    public function index(): Renderable
+    {
         $allEvents = $this->eventService->getEventList(true);
 
-        return view('admin.manage-events.index', compact('allEvents'));
+        return view(
+            'admin.manage-events.index',
+            compact('allEvents'),
+        );
     }
 
-    public function create(): Renderable {
+    public function create(): Renderable
+    {
         $event = null;
 
-        return view('admin.manage-events.form', compact('event'));
+        return view(
+            'admin.manage-events.form',
+            compact('event'),
+        );
     }
 
-    public function store(Request $request) {
-        // Do stuff to save it here...
-
+    public function store(Request $request): RedirectResponse
+    {
         try {
-            $this->eventService->save($request->only([
-                                                         'event_id',
-                                                         'name',
-                                                         'startDateTime',
-                                                         'endDateTime',
-                                                         'hodlAsset',
-                                                         'policyIds',
-                                                         'nonceValidForMinutes',
-                                                     ]));
+
+            $payload = $request->only([
+                'event_id',
+                'name',
+                'startDateTime',
+                'endDateTime',
+                'hodlAsset',
+                'policyIds',
+                'nonceValidForMinutes',
+            ]);
+
+            $this->eventService->save($payload);
 
             return redirect()
-                ->route('events.index')
-                ->with('status', $request->event_id ? trans('Event updated') : trans('Event created'));
+                ->route('manage-events.index')
+                ->with('status', !empty($request->event_id)
+                    ? trans('Event updated')
+                    : trans('Event created')
+                );
+
         } catch (Throwable $exception) {
-            return redirectBackWithError(trans('Failed to save event'), $exception);
+
+            return redirectBackWithError(
+                trans('Failed to save event'),
+                $exception,
+            );
+
         }
-//        return $request;
     }
 
-    public function show(Event $event): Renderable {
-//        return $event;
-        return view('admin.manage-events.view', compact('event'));
+    public function show(Event $event): Renderable
+    {
+        return view(
+            'admin.manage-events.view',
+            compact('event'),
+        );
     }
 
-    public function edit(Event $event): Renderable {
-        return view('admin.manage-events.form', compact('event'));
+    public function edit(Event $event): Renderable
+    {
+        return view(
+            'admin.manage-events.form',
+            compact('event'),
+        );
     }
 
-    public function destroy(Event $event) {
-        // Do stuff to delete it here...
+    public function destroy(Event $event): void
+    {
+        dd('TODO');
     }
 }

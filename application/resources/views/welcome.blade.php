@@ -15,20 +15,12 @@
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <p>
                                 Please note: for the time being, hardware wallets are not supported due to lack of
-                                support for the
-                                <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano
-                                                                                                                 CIP-8
-                                                                                                                 Message
-                                                                                                                 Signing
-                                </a>
+                                support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
                                 standard. We always encourage all users to secure their assets on a hardware wallet
                                 whenever possible for maximum security.
                             </p>
                             <p class="mb-0">
-                                Wallets that do not support the
-                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">
-                                    Cardano CIP-30 dApp-Wallet Bridge
-                                </a>
+                                Wallets that do not support the <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
                                 standard including Daedalus, Yoroi, and AdaLite are not supported.
                             </p>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -83,13 +75,11 @@
                                         <span class="wallet-name text-capitalize"></span> Connected <span
                                             class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
-                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3"
-                                            id="recheckBalance">
+                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3" id="recheckBalance">
                                         <i class="fa fa-refresh"></i>
                                         Recheck Balance
                                     </button>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
-                                            id="change-wallet-button">
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm" id="change-wallet-button">
                                         Change Wallet
                                     </button>
                                 </div>
@@ -101,8 +91,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -156,21 +145,13 @@
 @endsection
 
 @push('scripts')
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
-            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
-          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-    <script type="text/javascript"
-            src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/bridge/cardano-dapp-connector-bridge.min.js') }}"></script>
-    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as CSL from '//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 

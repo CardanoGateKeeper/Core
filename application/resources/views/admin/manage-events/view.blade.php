@@ -11,14 +11,14 @@
                             {{ __('Event Details') }}
                         </div>
                         <div>
-                            <a href="{{ route('events.index') }}" class="btn btn-sm btn-primary">
+                            <a href="{{ route('manage-events.index') }}" class="btn btn-sm btn-primary">
                                 <i class="fa fa-list"></i>
                                 {{ __('List Events') }}
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        TODO: Add event statistics and information here...
+                        TODO: Add event statistics and information here ...
                     </div>
                 </div>
             </div>
