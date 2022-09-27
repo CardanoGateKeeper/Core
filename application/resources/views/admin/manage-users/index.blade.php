@@ -7,12 +7,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
-                            <i class="fa fa-users"></i>
+                            <i class="fa fa-users me-1"></i>
                             {{ __('Manage Users') }}
                         </div>
                         <div>
                             <a href="{{ route('admin.manage-users.add-user') }}" class="btn btn-sm btn-primary">
-                                <i class="fa fa-user-plus"></i>
+                                <i class="fa fa-user-plus me-1"></i>
                                 {{ __('Add User') }}
                             </a>
                         </div>

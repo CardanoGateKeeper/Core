@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Exceptions\AppException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\Collection;
@@ -132,7 +133,7 @@ class UserService
         $user->save();
     }
 
-    private function passwordRules(): Password
+    public function passwordRules(): Password
     {
         return app()->environment('local')
             ? Password::min(6) // Simple password rule for local dev environment only
@@ -143,5 +144,44 @@ class UserService
                 ->symbols()
                 ->uncompromised()
         ;
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function validateCurrentPassword(int $userId, string $currentPassword): void
+    {
+        $user = $this->findById($userId);
+
+        if (!$user) {
+            throw new AppException(trans('User not found'));
+        }
+
+        if (!Hash::check($currentPassword, $user->password)) {
+            throw new AppException(trans('Current password is incorrect'));
+        }
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function updateAccount(int $userId, string $accountName, ?string $newPassword = null): void
+    {
+        $user = $this->findById($userId);
+
+        if (!$user) {
+            throw new AppException(trans('User not found'));
+        }
+
+        $payload = [
+            'name' => $accountName,
+        ];
+
+        if (!empty($newPassword)) {
+            $payload['password'] = $newPassword;
+        }
+
+        $user->fill($payload);
+        $user->save();
     }
 }
