@@ -8,10 +8,12 @@ use App\Http\Controllers\{
     DashboardController,
     Account\ProfileController,
     Admin\ManageUsersController,
-    Staff\ScanTicketsController,
+    Admin\ManageEventsController,
+    Staff\ScanTicketsController
 };
 
-Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
+Route::get('/', [HomeController::class, 'index']);
+Route::get('event/{eventUUID}', [HomeController::class, 'event'])->name('event');
 
 Auth::routes([
     'register' => false,
@@ -41,12 +43,18 @@ Route::middleware('auth')->group(function() {
             Route::post('save', [ManageUsersController::class, 'save'])->name('admin.manage-users.save');
         });
 
+        // Manage Events
+        Route::resource('manage-events', ManageEventsController::class)->parameters([
+            'manage-events' => 'event'
+        ]);
+
     });
 
     // Staff
-    Route::prefix('admin')->middleware('staff.only')->group(function() {
+    Route::prefix('staff')->middleware('staff.only')->group(function() {
         Route::prefix('scan-tickets')->group(function() {
             Route::get('/', [ScanTicketsController::class, 'index'])->name('staff.scan-tickets.index');
+            Route::get('{eventUUID}', [ScanTicketsController::class, 'event'])->name('staff.scan-tickets.event');
             Route::post('ajax/register-ticket', [ScanTicketsController::class, 'ajaxRegisterTicket'])->name('staff.scan-tickets.ajax.register-ticket');
         });
     });

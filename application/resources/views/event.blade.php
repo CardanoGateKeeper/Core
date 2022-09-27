@@ -10,20 +10,61 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card" id="mainContent">
-                    <div class="card-header">{{ __('Welcome to GateKeeper') }}</div>
+                    <div class="card-header d-flex gap-2 align-items-center">
+                        <i class="fa fa-smile-o"></i>
+                        {{ __('Welcome to GateKeeper') }}
+                        <span class="badge bg-primary">{{ $event->name }}</span>
+                    </div>
                     <div class="card-body">
-                        <div class="alert alert-info">
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <p>
-                                Please note: for the time being, hardware wallets are not supported due to lack
-                                of support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
+                                Please note: for the time being, hardware wallets are not supported due to lack of
+                                support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
                                 standard. We always encourage all users to secure their assets on a hardware wallet
                                 whenever possible for maximum security.
                             </p>
                             <p class="mb-0">
-                                Wallets that do not support the
-                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
+                                Wallets that do not support the <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
                                 standard including Daedalus, Yoroi, and AdaLite are not supported.
                             </p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <h4 class="alert-heading">How It Works</h4>
+                            <p>
+                                Welcome to GateKeeper Ticketing, a secure and safe way to convert your Cardano NFTs into
+                                tickets to real-world events while keeping your crypto safely at home!
+                            </p>
+                            <ul>
+                                <li>
+                                    To get started, you'll be asked to connect your light wallet from one of the
+                                    available options below.
+                                </li>
+                                <li>
+                                    Once connected, your eligible assets for this event will be displayed. Find the
+                                    token you wish to generate a ticket for and click the "Generate Ticket" button.
+                                </li>
+                                <li>
+                                    You will be asked to "sign" a data payload using the stake key of your wallet to
+                                    prove asset ownership. No funds will be moved from your wallet.
+                                </li>
+                                <li>
+                                    After your signature is authenticated, a ticket will be generated for your asset and
+                                    a QR code will be displayed on the screen. Save this QR code and bring it with you
+                                    to the event!
+                                </li>
+                                <li>
+                                    If you lose your QR code for any reason, you will need to return to this page and
+                                    generate a new one.
+                                </li>
+                                <li>
+                                    QR codes can only be used once to check in. If you sell or otherwise transfer your
+                                    token (NFT) the new owner may generate their own QR code for the event which will
+                                    invalidate your code. We recommend retaining ownership of the asset until after the
+                                    event.
+                                </li>
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <div id="wallet-section">
                             <div class="connect-wallet">
@@ -35,9 +76,13 @@
                                     class="connected-wallet d-flex flex-row align-items-center justify-content-center mb-4">
                                     <img class="connected-wallet-icon" alt=""/>
                                     <p class="wallet-info mb-0 mx-2 lead">
-                                        <span class="wallet-name text-capitalize"></span> Connected
-                                        <span class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
+                                        <span class="wallet-name text-capitalize"></span> Connected <span
+                                            class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
+                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3" id="recheckBalance">
+                                        <i class="fa fa-refresh"></i>
+                                        Recheck Balance
+                                    </button>
                                     <button type="button" class="btn change-wallet-btn btn-secondary btn-sm" id="change-wallet-button">
                                         Change Wallet
                                     </button>
@@ -116,9 +161,9 @@
 
         (async function ($) {
 
-            const EVENT_UUID = '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133';
+            const EVENT_UUID = '{{ $event->uuid }}';
 
-            const event = await $.get('{{ route('api.v1.event-info', '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133')}} ');
+            const event = await $.get('{{ route('api.v1.event-info', $event->uuid)}} ');
             const policy_ids = event.data.policyIds;
 
             // 1 = Mainnet, 0 = Testnet
@@ -152,6 +197,9 @@
             const wallet_connected = $('.change-wallet');
             const asset_container = $('#asset-container');
             const change_wallet_button = $('#change-wallet-button');
+
+            const IMAGE_CDN = '{{env('DEFAULT_IMAGE_CDN')}}';
+            const IMAGE_URL = '{{env('IMAGE_CDN_URL')}}';
 
             window.Wallet = false;
             window.Wallets = [];
@@ -219,6 +267,15 @@
                     allowOutsideClick: false,
                 });
             };
+
+            function getAssetImageUrl(asset) {
+                if (IMAGE_CDN === 'nftcdn') {
+                    return `//${asset.fingerprint}.${IMAGE_URL}/?size=312`;
+                }
+
+                return `${IMAGE_URL}/${asset.onchain_metadata.image.replace('ipfs://','')}`;
+            }
+
             // Utility Functions End
 
             async function fetchMetadata() {
@@ -250,7 +307,6 @@
                             });
                             let te = performance.now();
                             let delay_t = 600 - (te - ts);
-                            console.log(`Delay_T: ${delay_t}`);
                             if (delay_t > 0) {
                                 await delay(delay_t);
                             }
@@ -275,12 +331,15 @@
                     }
 
                     if (choice_exists === 0 && metadata !== null) {
+                        const img_url = getAssetImageUrl(asset_details);
+
+                        // console.log(asset_details);
                         const asset = `
                             <div class="col-md-3">
                                 <div class="card mb-3" id="${id}">
-                                    <img ${lazy}src="https://cloudflare-ipfs.com/ipfs/${metadata.image.replace('ipfs://', '')}" class="card-img-top lazy" alt="">
+                                    <img ${lazy}src="${img_url}" class="card-img-top lazy" alt="">
                                     <div class="card-body">
-                                        <h5 class="card-title">${metadata.name}</h5>
+                                        <h5 class="card-title text-center">${metadata.name}</h5>
                                         <button type="button" class="btn btn-primary col-12 btn-generate" data-policy="${asset_details.policy_id}" data-asset="${asset_details.asset_name}">
                                             <span class="fa fa-qrcode"></span>
                                             Generate Ticket
@@ -298,13 +357,18 @@
             }
 
             async function checkContents() {
-                let wallet_contents = await window.Wallet.getBalance();
-                return CSL.Value.from_bytes(toUint8Array(wallet_contents));
+                try {
+                    let wallet_contents = await window.Wallet.getBalance();
+                    return CSL.Value.from_bytes(toUint8Array(wallet_contents));
+                } catch (e) {
+                    showError("Sorry, we couldn't check your wallet balance at this time.");
+                    console.error(e);
+                }
             }
 
             async function hasNFTs(balance) {
                 const walletAssets = {};
-                if (balance.multiasset() === undefined) {
+                if (balance === undefined || balance.multiasset() === undefined) {
                     return walletAssets;
                 }
 
@@ -339,13 +403,20 @@
                 await connect(wallet_name);
             }
 
+            async function checkBalance() {
+                Swal.showLoading();
+
+                const connected_bal = $('.wallet-balance');
+                const wallet_balance = await checkContents();
+                const nfts = await hasNFTs(wallet_balance);
+
+                connected_bal.html(`${Object.keys(nfts).length} eligible assets found`)
+            }
+
             async function connect(wallet_name) {
-                console.log("Connecting to ", wallet_name);
                 Swal.showLoading();
 
                 let wallet = window.cardano[wallet_name];
-
-                console.log(wallet);
 
                 try {
                     window.Wallet = await wallet.enable();
@@ -353,17 +424,13 @@
                         window.Wallet.assets = {};
                         let connected_img = $('.connected-wallet-icon');
                         let connected_name = $('.wallet-name');
-                        let connected_bal = $('.wallet-balance');
 
                         connected_img.attr('src', wallet.icon);
                         connected_img.attr('alt', wallet.name);
                         connected_img.attr('title', wallet.name);
                         connected_name.html(wallet.name);
 
-                        const wallet_balance = await checkContents();
-                        const nfts = await hasNFTs(wallet_balance);
-
-                        connected_bal.html(`${Object.keys(nfts).length} eligible assets found`)
+                        await checkBalance();
 
                         connector_section.hide();
                         wallet_connected.show();
@@ -372,13 +439,6 @@
                 } catch (err) {
                     showError(err.message || 'Failed to connect to wallet')
                 }
-            }
-
-            function changeWallet() {
-                window.Wallet = undefined;
-                wallet_connected.hide();
-                connector_section.show();
-                asset_container.html('');
             }
 
             async function generateTicket(evt) {
@@ -470,8 +530,9 @@
                     if (!has_cardano) {
                         connector_section.show();
                         has_cardano = true;
+                        $(document).on('click', '#recheckBalance', checkBalance);
                         $(document).on('click', '.connect-btn', connectWallet);
-                        $(document).on('click', '.change-wallet-btn', changeWallet);
+                        $(document).on('click', '.change-wallet-btn', () => location.reload());
                         $(document).on('click', '.btn-generate', generateTicket);
                         $(document).on('hidden.bs.modal', '#TicketModal', () => {
                             $('#ticketQr').attr('src', '');

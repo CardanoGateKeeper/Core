@@ -6,9 +6,10 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
+                        <div class="d-flex gap-2 align-items-center">
                             <i class="fa fa-ticket me-1"></i>
                             {{ __('Scan Tickets') }}
+                            <span class="badge bg-primary">{{ $event->name }}</span>
                         </div>
                         <div>
                             <a href="{{ route('staff.scan-tickets.index') }}" class="btn btn-sm btn-primary">
@@ -31,8 +32,7 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
 
-        // TODO: This should be selected by staff, i.e. which event they are registering tickets (hardcoded for now)
-        const EVENT_UUID = '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133'; // Example Event
+        const EVENT_UUID = '{{ $event->uuid }}';
 
         $.ajaxSetup({
             headers: {

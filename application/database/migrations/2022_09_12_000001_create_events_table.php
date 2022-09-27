@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\Event;
 use Carbon\Carbon;
+use App\Models\Event;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -31,7 +32,7 @@ return new class extends Migration
         $now = Carbon::now();
         $exampleEvent = new Event;
         $exampleEvent->fill([
-            'uuid' => '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133', // UUID v4
+            'uuid' => Str::uuid()->toString(),
             'name' => 'Example Event',
             'policyIds' => [
                 '5fa72fbeecbe80a3e15de1cacab54ba5e310e2c36ae85351132ed4ad',
