@@ -12,18 +12,63 @@
                 <div class="card" id="mainContent">
                     <div class="card-header">{{ __('Welcome to GateKeeper') }}</div>
                     <div class="card-body">
-                        <div class="alert alert-info">
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <p>
-                                Please note: for the time being, hardware wallets are not supported due to lack
-                                of support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
+                                Please note: for the time being, hardware wallets are not supported due to lack of
+                                support for the
+                                <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano
+                                                                                                                 CIP-8
+                                                                                                                 Message
+                                                                                                                 Signing
+                                </a>
                                 standard. We always encourage all users to secure their assets on a hardware wallet
                                 whenever possible for maximum security.
                             </p>
                             <p class="mb-0">
                                 Wallets that do not support the
-                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
+                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">
+                                    Cardano CIP-30 dApp-Wallet Bridge
+                                </a>
                                 standard including Daedalus, Yoroi, and AdaLite are not supported.
                             </p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <h4 class="alert-heading">How It Works</h4>
+                            <p>
+                                Welcome to GateKeeper Ticketing, a secure and safe way to convert your Cardano NFTs into
+                                tickets to real-world events while keeping your crypto safely at home!
+                            </p>
+                            <ul>
+                                <li>
+                                    To get started, you'll be asked to connect your light wallet from one of the
+                                    available options below.
+                                </li>
+                                <li>
+                                    Once connected, your eligible assets for this event will be displayed. Find the
+                                    token you wish to generate a ticket for and click the "Generate Ticket" button.
+                                </li>
+                                <li>
+                                    You will be asked to "sign" a data payload using the stake key of your wallet to
+                                    prove asset ownership. No funds will be moved from your wallet.
+                                </li>
+                                <li>
+                                    After your signature is authenticated, a ticket will be generated for your asset and
+                                    a QR code will be displayed on the screen. Save this QR code and bring it with you
+                                    to the event!
+                                </li>
+                                <li>
+                                    If you lose your QR code for any reason, you will need to return to this page and
+                                    generate a new one.
+                                </li>
+                                <li>
+                                    QR codes can only be used once to check in. If you sell or otherwise transfer your
+                                    token (NFT) the new owner may generate their own QR code for the event which will
+                                    invalidate your code. We recommend retaining ownership of the asset until after the
+                                    event.
+                                </li>
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <div id="wallet-section">
                             <div class="connect-wallet">
@@ -35,10 +80,11 @@
                                     class="connected-wallet d-flex flex-row align-items-center justify-content-center mb-4">
                                     <img class="connected-wallet-icon" alt=""/>
                                     <p class="wallet-info mb-0 mx-2 lead">
-                                        <span class="wallet-name text-capitalize"></span> Connected
-                                        <span class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
+                                        <span class="wallet-name text-capitalize"></span> Connected <span
+                                            class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm" id="change-wallet-button">
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
+                                            id="change-wallet-button">
                                         Change Wallet
                                     </button>
                                 </div>
@@ -50,7 +96,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -104,13 +151,21 @@
 @endsection
 
 @push('scripts')
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
+            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
+          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
+    <script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/bridge/cardano-dapp-connector-bridge.min.js') }}"></script>
-    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as CSL from '//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 
@@ -152,6 +207,9 @@
             const wallet_connected = $('.change-wallet');
             const asset_container = $('#asset-container');
             const change_wallet_button = $('#change-wallet-button');
+
+            const IMAGE_CDN = '{{env('DEFAULT_IMAGE_CDN')}}';
+            const IMAGE_URL = '{{env('IMAGE_CDN_URL')}}';
 
             window.Wallet = false;
             window.Wallets = [];
@@ -219,6 +277,15 @@
                     allowOutsideClick: false,
                 });
             };
+
+            function getAssetImageUrl(asset) {
+                if (IMAGE_CDN === 'nftcdn') {
+                    return `//${asset.fingerprint}.${IMAGE_URL}/?size=312`;
+                }
+
+                return `${IMAGE_URL}/${asset.onchain_metadata.image.replace('ipfs://','')}`;
+            }
+
             // Utility Functions End
 
             async function fetchMetadata() {
@@ -250,7 +317,6 @@
                             });
                             let te = performance.now();
                             let delay_t = 600 - (te - ts);
-                            console.log(`Delay_T: ${delay_t}`);
                             if (delay_t > 0) {
                                 await delay(delay_t);
                             }
@@ -275,12 +341,15 @@
                     }
 
                     if (choice_exists === 0 && metadata !== null) {
+                        const img_url = getAssetImageUrl(asset_details);
+
+                        // console.log(asset_details);
                         const asset = `
                             <div class="col-md-3">
                                 <div class="card mb-3" id="${id}">
-                                    <img ${lazy}src="https://cloudflare-ipfs.com/ipfs/${metadata.image.replace('ipfs://', '')}" class="card-img-top lazy" alt="">
+                                    <img ${lazy}src="${img_url}" class="card-img-top lazy" alt="">
                                     <div class="card-body">
-                                        <h5 class="card-title">${metadata.name}</h5>
+                                        <h5 class="card-title text-center">${metadata.name}</h5>
                                         <button type="button" class="btn btn-primary col-12 btn-generate" data-policy="${asset_details.policy_id}" data-asset="${asset_details.asset_name}">
                                             <span class="fa fa-qrcode"></span>
                                             Generate Ticket
