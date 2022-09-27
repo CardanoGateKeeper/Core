@@ -441,13 +441,6 @@
                 }
             }
 
-            function changeWallet() {
-                window.Wallet = undefined;
-                wallet_connected.hide();
-                connector_section.show();
-                asset_container.html('');
-            }
-
             async function generateTicket(evt) {
                 Swal.showLoading();
 
@@ -539,7 +532,7 @@
                         has_cardano = true;
                         $(document).on('click', '#recheckBalance', checkBalance);
                         $(document).on('click', '.connect-btn', connectWallet);
-                        $(document).on('click', '.change-wallet-btn', changeWallet);
+                        $(document).on('click', '.change-wallet-btn', () => location.reload());
                         $(document).on('click', '.btn-generate', generateTicket);
                         $(document).on('hidden.bs.modal', '#TicketModal', () => {
                             $('#ticketQr').attr('src', '');
