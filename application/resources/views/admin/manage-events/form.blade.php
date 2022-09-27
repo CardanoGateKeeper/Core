@@ -41,7 +41,7 @@
                                         <label for="startDateTime" class="form-label">
                                             {{ __('Ticketing Start Time (UTC)') }}
                                         </label>
-                                        <input id="startDateTime" name="startDateTime" type="datetime-local" class="form-control datepicker" step="any" value="{{ old('startDateTime', ($event ? $event->startDateTime->toDateTimeLocalString() : '')) }}" />
+                                        <input id="startDateTime" name="startDateTime" type="datetime-local" class="form-control datepicker" step="any" value="{{ old('startDateTime', ($event && $event->startDateTime ? $event->startDateTime->toDateTimeLocalString() : '')) }}" />
                                     </div>
                                 </div>
                                 <div class="col mb-3">
@@ -49,7 +49,7 @@
                                         <label for="endDateTime" class="form-label">
                                             {{ __('Ticketing End Time (UTC)') }}
                                         </label>
-                                        <input id="endDateTime" name="endDateTime" type="datetime-local" class="form-control datepicker" step="any" value="{{ old('endDateTime', ($event ? $event->endDateTime->toDateTimeLocalString() : '')) }}" required />
+                                        <input id="endDateTime" name="endDateTime" type="datetime-local" class="form-control datepicker" step="any" value="{{ old('endDateTime', ($event && $event->endDateTime ? $event->endDateTime->toDateTimeLocalString() : '')) }}" required />
                                     </div>
                                 </div>
                             </div>

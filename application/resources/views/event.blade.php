@@ -10,7 +10,11 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card" id="mainContent">
-                    <div class="card-header">{{ __('Welcome to GateKeeper') }}</div>
+                    <div class="card-header d-flex gap-2 align-items-center">
+                        <i class="fa fa-smile-o"></i>
+                        {{ __('Welcome to GateKeeper') }}
+                        <span class="badge bg-primary">{{ $event->name }}</span>
+                    </div>
                     <div class="card-body">
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <p>
@@ -157,9 +161,9 @@
 
         (async function ($) {
 
-            const EVENT_UUID = '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133';
+            const EVENT_UUID = '{{ $event->uuid }}';
 
-            const event = await $.get('{{ route('api.v1.event-info', '7fdc027f-d1c3-4385-bf1b-aa9e0e81b133')}} ');
+            const event = await $.get('{{ route('api.v1.event-info', $event->uuid)}} ');
             const policy_ids = event.data.policyIds;
 
             // 1 = Mainnet, 0 = Testnet

@@ -12,6 +12,7 @@ use App\Exceptions\AppException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Traits\JsonResponseTrait;
 use Illuminate\Contracts\Support\Renderable;
 use App\ThirdParty\CardanoClients\ICardanoClient;
@@ -35,9 +36,35 @@ class ScanTicketsController extends Controller
         $this->cardanoClient = $cardanoClient;
     }
 
-    public function index(): Renderable
+    public function index(): RedirectResponse
     {
-        return view('staff.scan-tickets.index');
+        /**
+         * TODO: Let the user pick the event they want to generate tickets for
+         * TODO: For now, we get the first event in the system
+         */
+
+        $eventList = $this->eventService->getEventList();
+
+        if (!$eventList->count()) {
+            abort(500, trans('Events missing'));
+        }
+
+        return redirect()
+            ->route('staff.scan-tickets.event', $eventList->first()->uuid);
+    }
+
+    public function event(string $eventUUID): Renderable
+    {
+        $event = $this->eventService->findByUUID($eventUUID);
+
+        if (!$event) {
+            abort(404, trans('Event not found'));
+        }
+
+        return view(
+            'staff.scan-tickets.event',
+            compact('event'),
+        );
     }
 
     public function ajaxRegisterTicket(Request $request): JsonResponse

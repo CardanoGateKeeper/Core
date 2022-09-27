@@ -10,7 +10,7 @@ class StaffOnly
     public function handle(Request $request, Closure $next): mixed
     {
         if (!isStaff()) {
-            abort(401);
+            abort(401, trans('Staff only'));
         }
 
         return $next($request);
