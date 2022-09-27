@@ -83,6 +83,11 @@
                                         <span class="wallet-name text-capitalize"></span> Connected <span
                                             class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
+                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3"
+                                            id="recheckBalance">
+                                        <i class="fa fa-refresh"></i>
+                                        Recheck Balance
+                                    </button>
                                     <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
                                             id="change-wallet-button">
                                         Change Wallet
@@ -367,13 +372,18 @@
             }
 
             async function checkContents() {
-                let wallet_contents = await window.Wallet.getBalance();
-                return CSL.Value.from_bytes(toUint8Array(wallet_contents));
+                try {
+                    let wallet_contents = await window.Wallet.getBalance();
+                    return CSL.Value.from_bytes(toUint8Array(wallet_contents));
+                } catch (e) {
+                    showError("Sorry, we couldn't check your wallet balance at this time.");
+                    console.error(e);
+                }
             }
 
             async function hasNFTs(balance) {
                 const walletAssets = {};
-                if (balance.multiasset() === undefined) {
+                if (balance === undefined || balance.multiasset() === undefined) {
                     return walletAssets;
                 }
 
@@ -408,13 +418,20 @@
                 await connect(wallet_name);
             }
 
+            async function checkBalance() {
+                Swal.showLoading();
+
+                const connected_bal = $('.wallet-balance');
+                const wallet_balance = await checkContents();
+                const nfts = await hasNFTs(wallet_balance);
+
+                connected_bal.html(`${Object.keys(nfts).length} eligible assets found`)
+            }
+
             async function connect(wallet_name) {
-                console.log("Connecting to ", wallet_name);
                 Swal.showLoading();
 
                 let wallet = window.cardano[wallet_name];
-
-                console.log(wallet);
 
                 try {
                     window.Wallet = await wallet.enable();
@@ -422,17 +439,13 @@
                         window.Wallet.assets = {};
                         let connected_img = $('.connected-wallet-icon');
                         let connected_name = $('.wallet-name');
-                        let connected_bal = $('.wallet-balance');
 
                         connected_img.attr('src', wallet.icon);
                         connected_img.attr('alt', wallet.name);
                         connected_img.attr('title', wallet.name);
                         connected_name.html(wallet.name);
 
-                        const wallet_balance = await checkContents();
-                        const nfts = await hasNFTs(wallet_balance);
-
-                        connected_bal.html(`${Object.keys(nfts).length} eligible assets found`)
+                        await checkBalance();
 
                         connector_section.hide();
                         wallet_connected.show();
@@ -539,6 +552,7 @@
                     if (!has_cardano) {
                         connector_section.show();
                         has_cardano = true;
+                        $(document).on('click', '#recheckBalance', checkBalance);
                         $(document).on('click', '.connect-btn', connectWallet);
                         $(document).on('click', '.change-wallet-btn', changeWallet);
                         $(document).on('click', '.btn-generate', generateTicket);
