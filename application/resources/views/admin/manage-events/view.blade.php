@@ -17,7 +17,9 @@
                             </a>
                         </div>
                     </div>
-                    <div class="card-body"></div>
+                    <div class="card-body">
+                        TODO: Add event statistics and information here...
+                    </div>
                 </div>
             </div>
         </div>
