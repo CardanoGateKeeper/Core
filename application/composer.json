@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "ext-curl": "*",
         "endroid/qr-code": "^4.5",
+        "google/apiclient": "^2.15",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

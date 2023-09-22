@@ -19,12 +19,20 @@
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <p>
                                 Please note: for the time being, hardware wallets are not supported due to lack of
-                                support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
+                                support for the
+                                <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano
+                                                                                                                 CIP-8
+                                                                                                                 Message
+                                                                                                                 Signing
+                                </a>
                                 standard. We always encourage all users to secure their assets on a hardware wallet
                                 whenever possible for maximum security.
                             </p>
                             <p class="mb-0">
-                                Wallets that do not support the <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
+                                Wallets that do not support the
+                                <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">
+                                    Cardano CIP-30 dApp-Wallet Bridge
+                                </a>
                                 standard including Daedalus, Yoroi, and AdaLite are not supported.
                             </p>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -79,11 +87,12 @@
                                         <span class="wallet-name text-capitalize"></span> Connected <span
                                             class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
-                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3" id="recheckBalance">
-                                        <i class="fa fa-refresh"></i>
-                                        Recheck Balance
+                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3"
+                                            id="recheckBalance">
+                                        <i class="fa fa-refresh"></i> Recheck Balance
                                     </button>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm" id="change-wallet-button">
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
+                                            id="change-wallet-button">
                                         Change Wallet
                                     </button>
                                 </div>
@@ -95,7 +104,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -135,6 +145,9 @@
                                     <button type="button" class="btn btn-primary" onclick="window.print();">
                                         <i class="fa fa-print"></i> Print Ticket
                                     </button>
+                                    <a href="" class="btn btn-dark" target="_blank" id="google-wallet">
+                                        Google Wallet
+                                    </a>
                                 </div>
                             </div>
                             <div class="col mb-4">
@@ -149,13 +162,28 @@
 @endsection
 
 @push('scripts')
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    {{--<script src="https://apis.google.com/js/platform.js" type="text/javascript">
+        {
+            "parsetags"
+        :
+            "explicit"
+        }
+    </script>--}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
+            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
+          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
+    <script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/bridge/cardano-dapp-connector-bridge.min.js') }}"></script>
-    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as CSL from '//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 
@@ -167,7 +195,7 @@
             const policy_ids = event.data.policyIds;
 
             // 1 = Mainnet, 0 = Testnet
-            const network_mode = 1;
+            const network_mode = <?= env('CARDANO_NETWORK') === 'mainnet' ? 1 : 0; ?>;
 
             const protocolParameters = {
                 linearFee: {
@@ -273,7 +301,7 @@
                     return `//${asset.fingerprint}.${IMAGE_URL}/?size=312`;
                 }
 
-                return `${IMAGE_URL}/${asset.onchain_metadata.image.replace('ipfs://','')}`;
+                return `${IMAGE_URL}/${asset.onchain_metadata.image.replace('ipfs://', '')}`;
             }
 
             // Utility Functions End
@@ -448,7 +476,7 @@
                     const reward_addresses = await window.Wallet.getRewardAddresses();
                     const stake_address_cbor = reward_addresses[0];
                     const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
-                    const stake_bech32 = stake_key.to_bech32('stake');
+                    const stake_bech32 = stake_key.to_bech32(network_mode ? 'stake' : 'stake_test');
 
                     // TODO: Insert recaptcha here to prevent API abuse!!!
                     const policy_id = evt.currentTarget.dataset.policy;
@@ -477,7 +505,7 @@
                 try {
                     const payload = await window.Wallet.signData(stake_address_cbor, nonce);
                     const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
-                    const stake_bech32 = stake_key.to_bech32('stake');
+                    const stake_bech32 = stake_key.to_bech32(network_mode ? 'stake' : 'stake_test');
                     $.post('{{route('api.v1.validate-nonce')}}', {
                         event_uuid: EVENT_UUID,
                         stake_key: stake_bech32,
@@ -489,13 +517,20 @@
                         $('#ticketAssetId').val(response.data.assetId);
                         $('#ticketSecurityCode').val(response.data.securityCode);
                         $('#ticketQr').attr('src', response.data.qr);
+                        $('#google-wallet').attr('href', `https://pay.google.com/gp/v/save/${response.data.jwt}`);
                         $('#TicketModal').modal('show');
+
                     }).fail(err => showError(err.responseJSON.error || "Sorry, there was an error signing the request!"));
                 } catch (err) {
                     showError(err.message || 'Failed to capture signature');
                 }
 
                 Swal.close();
+            }
+
+            function gPayErrorHandler(err) {
+                console.error("Error when attempting to save to Google Pay?", err.errorCode, err.errorMessage);
+                console.error(err);
             }
 
             async function run() {
