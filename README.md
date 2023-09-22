@@ -12,7 +12,7 @@ Developed by [Adam Dean](https://twitter.com/adamKDean) & [Latheesan Kanesamoort
 ## Local Install
 - Open terminal and type `cd $HOME/Desktop`
 - Run `docker network create --driver bridge local-gatekeeper` (**Only Required First Time Setup**)
-- Clone repo `git clone git@github.com:CardanoGateKeeper/Core.git`
+- Clone repo `git clone https://github.com/CardanoGateKeeper/Core.git`
 - Switch to repo dir `cd $HOME/Desktop/GateKeeper`
 - Copy `docker/docker-compose.custom.yml.example` as `docker/docker-compose.custom.yml`
 - Copy `application/.env.example` as `application/.env`
