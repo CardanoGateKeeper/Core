@@ -2,9 +2,7 @@
 
 @section('og')
     <meta property="og:title" content="{{$event->name}}"/>
-    @if($event->description)
-        <meta property="og:description" content="{{$event->description}}"/>
-    @endif
+    <meta property="og:description" content="{{$event->description()}}"/>
     <meta property="og:type" content="website"/>
     @if($event->image)
         <meta property="og:image" content="<?= asset($event->image) ?>"/>

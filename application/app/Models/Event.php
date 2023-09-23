@@ -48,4 +48,26 @@ class Event extends Model {
     public function tickets(): HasMany {
         return $this->hasMany(Ticket::class, 'eventId');
     }
+
+    public function description() {
+        $description = "";
+        if ($this->eventDate) {
+            $description .= date('l jS \of F Y', strtotime($this->eventDate));
+        }
+
+        if ($this->eventStart && $this->eventEnd) {
+            $description .= " " . $this->eventStart . " to " . $this->eventEnd . ".";
+        } else if ($this->eventStart) {
+            $description .= " " . $this->eventStart;
+        } else if ($this->eventEnd) {
+            $description .= " until " . $this->eventEnd;
+        }
+
+        if ($this->location) {
+            $description .= " " . $this->location;
+        }
+
+        return $description;
+
+    }
 }
