@@ -52,7 +52,7 @@ class Event extends Model {
     public function description() {
         $description = "";
         if ($this->eventDate) {
-            $description .= date('l jS \of F Y', strtotime($this->eventDate));
+            $description .= date('l, F jS, Y', strtotime($this->eventDate));
         }
 
         if ($this->eventStart && $this->eventEnd) {
