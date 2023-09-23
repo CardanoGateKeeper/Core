@@ -35,12 +35,17 @@ class BlockFrostClient implements ICardanoClient
             throw new AppException(trans('Asset not found in any wallets'));
         }
 
+        error_log("Blockfrost response:\r\n".print_r($assetAddresses,true));
+
         $firstAssetAddress = $assetAddresses[0]['address'];
 
         $addressInfo = $this->call(
             self::HTTP_REQUEST_GET,
             "addresses/{$firstAssetAddress}",
         );
+
+//        error_log("Address details:\r\n".json_encode($addressInfo, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+        error_log("Got address details {$stakeKey} {$addressInfo['stake_address']}");
 
         return $addressInfo['stake_address'] === $stakeKey;
     }

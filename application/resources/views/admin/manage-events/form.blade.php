@@ -22,26 +22,83 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('manage-events.store') }}" method="post">
+                        <form action="{{ route('manage-events.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             @if ($event)
                                 <input type="hidden" name="event_id" value="{{ $event->id }}"/>
                             @endif
-
                             <div class="mb-3">
                                 <label for="name" class="form-label">
                                     {{ __('Event Name') }}
                                 </label>
-                                <input id="name" name="name" value="{{ old('name', ($event ? $event->name : '')) }}" type="text" class="form-control" required />
+                                <input id="name" name="name" value="{{ old('name', ($event ? $event->name : '')) }}"
+                                       type="text" class="form-control" required/>
                             </div>
-
+                            <div class="d-flex justify-content-between">
+                                <div class="mb-3">
+                                    <label for="og" class="form-label">
+                                        {{ __('Event Image') }}
+                                    </label>
+                                    <input id="og" name="image" type="file" class="form-control"/>
+                                    <p class="small text-muted">
+                                        Ideal images should be 1200px by 630px and contain no or minimal text.
+                                    </p>
+                                </div>
+                                @if ($event->image)
+                                    <div class="w-50">
+                                        <img src="{{ asset($event->image) }}" class="img-thumbnail img-fluid" />
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">
+                                    {{ __('Event Location') }}
+                                </label>
+                                <input id="location" name="location"
+                                       value="{{ old('location', ($event ? $event->location : '')) }}" type="text"
+                                       class="form-control"/>
+                            </div>
+                            <div class="row row-cols-1 row-cols-md-3">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label for="eventDate">
+                                            {{ __('Event Date') }}
+                                        </label>
+                                        <input id="eventDate" name="eventDate"
+                                               value="{{ old('eventDate', ($event ? $event->eventDate : '')) }}"
+                                               type="date" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label for="eventStart">
+                                            {{ __('Event Start Time') }}
+                                        </label>
+                                        <input id="eventStart" name="eventStart"
+                                               value="{{ old('eventStart', ($event ? $event->eventStart : '')) }}"
+                                               type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label for="eventEnd">
+                                            {{ __('Event End Time') }}
+                                        </label>
+                                        <input id="eventEnd" name="eventEnd"
+                                               value="{{ old('eventEnd', ($event ? $event->eventEnd : '')) }}"
+                                               type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row row-cols-1 row-cols-md-2">
                                 <div class="col">
                                     <div class="mb-3">
                                         <label for="startDateTime" class="form-label">
                                             {{ __('Ticketing Start Time (UTC)') }}
                                         </label>
-                                        <input id="startDateTime" name="startDateTime" type="datetime-local" class="form-control datepicker" step="any" value="{{ old('startDateTime', ($event && $event->startDateTime ? $event->startDateTime->toDateTimeLocalString() : '')) }}" />
+                                        <input id="startDateTime" name="startDateTime" type="datetime-local"
+                                               class="form-control datepicker" step="any"
+                                               value="{{ old('startDateTime', ($event && $event->startDateTime ? $event->startDateTime->toDateTimeLocalString() : '')) }}"/>
                                     </div>
                                 </div>
                                 <div class="col mb-3">
@@ -49,17 +106,24 @@
                                         <label for="endDateTime" class="form-label">
                                             {{ __('Ticketing End Time (UTC)') }}
                                         </label>
-                                        <input id="endDateTime" name="endDateTime" type="datetime-local" class="form-control datepicker" step="any" value="{{ old('endDateTime', ($event && $event->endDateTime ? $event->endDateTime->toDateTimeLocalString() : '')) }}" required />
+                                        <input id="endDateTime" name="endDateTime" type="datetime-local"
+                                               class="form-control datepicker" step="any"
+                                               value="{{ old('endDateTime', ($event && $event->endDateTime ? $event->endDateTime->toDateTimeLocalString() : '')) }}"
+                                               required/>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row row-cols-1 row-cols-md-2">
                                 <div class="col">
                                     <div class="mb-3">
                                         <div class="form-check form-switch">
-                                            <input type="checkbox" name="hodlAsset" class="form-check-input" role="switch" {{ ($event && $event->hodlAsset ? 'checked' : '') }} id="hodlAsset" value="1" />
-                                            <label class="form-check-label" for="hodlAsset">Users must hold asset at check-in</label>
+                                            <input type="checkbox" name="hodlAsset" class="form-check-input"
+                                                   role="switch"
+                                                   {{ ($event && $event->hodlAsset ? 'checked' : '') }} id="hodlAsset"
+                                                   value="1"/>
+                                            <label class="form-check-label" for="hodlAsset">Users must hold asset at
+                                                                                            check-in
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -69,20 +133,23 @@
                                             Signature Expiration Period
                                         </label>
                                         <div class="input-group">
-                                            <input type="number" name="nonceValidForMinutes" id="nonceValidForMinutes" step="1" min="5" class="form-control" aria-labelledby="timeoutHelp" value="{{ old('nonceValidForMinutes', ($event ? $event->nonceValidForMinutes : 15)) }}" required />
+                                            <input type="number" name="nonceValidForMinutes" id="nonceValidForMinutes"
+                                                   step="1" min="5" class="form-control" aria-labelledby="timeoutHelp"
+                                                   value="{{ old('nonceValidForMinutes', ($event ? $event->nonceValidForMinutes : 15)) }}"
+                                                   required/>
                                             <span class="input-group-text">minutes</span>
                                         </div>
                                         <div id="timeoutHelp" class="form-text">Default: 15 minutes</div>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label" for="policyIds">Eligible Policy IDs</label>
-                                <textarea id="policyIds" name="policyIds" class="form-control" rows="5" required aria-describedby="policyIdHelp">{{ old('policyIds', ($event ? implode("\r\n", $event->policyIds) : '')) }}</textarea>
-                                <div id="policyIdHelp" class="form-text">Please list each eligible policy on a new line</div>
+                                <textarea id="policyIds" name="policyIds" class="form-control" rows="5" required
+                                          aria-describedby="policyIdHelp">{{ old('policyIds', ($event ? implode("\r\n", $event->policyIds) : '')) }}</textarea>
+                                <div id="policyIdHelp" class="form-text">Please list each eligible policy on a new line
+                                </div>
                             </div>
-
                             <div class="d-flex gap-3">
                                 <button type="submit" class="btn btn-primary">
                                     @if($event)
