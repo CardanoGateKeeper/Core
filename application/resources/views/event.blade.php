@@ -20,10 +20,9 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card" id="mainContent">
-                    <div class="card-header d-flex gap-2 align-items-center">
-                        <i class="fa fa-smile-o"></i>
-                        {{ __('Welcome to GateKeeper') }}
-                        <span class="badge bg-primary">{{ $event->name }}</span>
+                    <div class="px-3 text-white bg-dark" style="border-top-right-radius: var(--bs-card-border-radius); border-top-left-radius: var(--bs-card-border-radius); padding-top: 20vh; background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 100%), url({{asset($event->image)}}) scroll no-repeat center center; background-size: cover;">
+                        <h1>{{$event->name}}</h1>
+                        <p>{{$event->description()}}</p>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
