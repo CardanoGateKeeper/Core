@@ -1,4 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.app')@section('title', $event->name)
+
+@section('og')
+    <meta property="og:title" content="{{$event->name}}"/>
+    <meta property="og:description" content="{{$event->description()}}"/>
+    <meta property="og:type" content="website"/>
+    @if($event->image)
+        <meta property="og:image" content="<?= asset($event->image) ?>"/>
+    @endif
+    <meta name="twitter:card" content="summary_large_image"/>
+@endsection
 
 @section('content')
     <style media="print">
@@ -10,24 +20,24 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card" id="mainContent">
-                    <div class="card-header d-flex gap-2 align-items-center">
-                        <i class="fa fa-smile-o"></i>
-                        {{ __('Welcome to GateKeeper') }}
-                        <span class="badge bg-primary">{{ $event->name }}</span>
+                    <div class="px-3 text-white bg-dark" style="border-top-right-radius: var(--bs-card-border-radius); border-top-left-radius: var(--bs-card-border-radius); padding-top: 20vh; background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 100%), url({{asset($event->image)}}) scroll no-repeat center center; background-size: cover;">
+                        <h1>{{$event->name}}</h1>
+                        <p>{{$event->description()}}</p>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             <p>
-                                Please note: for the time being, hardware wallets are not supported due to lack of
-                                support for the <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano CIP-8 Message Signing</a>
+                                Please note: Hardware wallets (Ledger, Trezor, etc) are not supported due to lack of
+                                support for the
+                                <a href="https://cips.cardano.org/cips/cip8/" target="_blank" class="alert-link">Cardano
+                                                                                                                 CIP-8
+                                                                                                                 Message
+                                                                                                                 Signing
+                                </a>
                                 standard. We always encourage all users to secure their assets on a hardware wallet
                                 whenever possible for maximum security.
                             </p>
-                            <p class="mb-0">
-                                Wallets that do not support the <a href="https://cips.cardano.org/cips/cip30/" target="_blank" class="alert-link">Cardano CIP-30 dApp-Wallet Bridge</a>
-                                standard including Daedalus, Yoroi, and AdaLite are not supported.
-                            </p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <h4 class="alert-heading">How It Works</h4>
@@ -79,11 +89,12 @@
                                         <span class="wallet-name text-capitalize"></span> Connected <span
                                             class="wallet-balance badge bg-info text-white p-2 mx-3"></span>
                                     </p>
-                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3" id="recheckBalance">
-                                        <i class="fa fa-refresh"></i>
-                                        Recheck Balance
+                                    <button type="button" class="btn check-wallet btn-outline-secondary btn-sm me-3"
+                                            id="recheckBalance">
+                                        <i class="fa fa-refresh"></i> Recheck Balance
                                     </button>
-                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm" id="change-wallet-button">
+                                    <button type="button" class="btn change-wallet-btn btn-secondary btn-sm"
+                                            id="change-wallet-button">
                                         Change Wallet
                                     </button>
                                 </div>
@@ -95,7 +106,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="TicketModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -149,13 +161,21 @@
 @endsection
 
 @push('scripts')
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js" integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css" integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.js"
+            integrity="sha512-yc+tEbvC4kiy3J6e0aZogFVr8AZhMtJTof2z+fGPaJgjehpIPzguZxfRRTiQcXlSHbJsB3Bborvv++81TMLZ2w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.32/sweetalert2.min.css"
+          integrity="sha512-doewDSLNwoD1ZCdA1D1LXbbdNlI4uZv7vICMrzxfshHmzzyFNhajLEgH/uigrbOi8ETIftUGBkyLnbyDOU5rpA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
+    <script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/bridge/cardano-dapp-connector-bridge.min.js') }}"></script>
-    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/bundle.js"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as CSL from '//cdn.dripdropz.io/wallet-connector/csl-v10.0.4/init.js';
 
@@ -167,7 +187,7 @@
             const policy_ids = event.data.policyIds;
 
             // 1 = Mainnet, 0 = Testnet
-            const network_mode = 1;
+            const network_mode = {{env('CARDANO_NETWORK') === 'mainnet' ? 1 : 0}};
 
             const protocolParameters = {
                 linearFee: {
@@ -183,13 +203,17 @@
             };
 
             const supported_wallets = [
-                'nami',
-                'eternl',
-                'flint',
-                'typhoncip30',
-                'gerowallet',
-                'LodeWallet',
-                'nufi'
+                "nami",
+                "eternl",
+                "flint",
+                "typhoncip30",
+                "gerowallet",
+                "yoroi",
+                "LodeWallet",
+                "nufi",
+                "vespr",
+                "begin",
+                "lace",
             ];
 
             const connector_section = $('.connect-wallet');
@@ -273,7 +297,7 @@
                     return `//${asset.fingerprint}.${IMAGE_URL}/?size=312`;
                 }
 
-                return `${IMAGE_URL}/${asset.onchain_metadata.image.replace('ipfs://','')}`;
+                return `${IMAGE_URL}/${asset.onchain_metadata.image.replace('ipfs://', '')}`;
             }
 
             // Utility Functions End
@@ -448,7 +472,7 @@
                     const reward_addresses = await window.Wallet.getRewardAddresses();
                     const stake_address_cbor = reward_addresses[0];
                     const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
-                    const stake_bech32 = stake_key.to_bech32('stake');
+                    const stake_bech32 = stake_key.to_bech32('{{env('CARDANO_NETWORK') === 'mainnet' ? 'stake' : 'stake_test'}}');
 
                     // TODO: Insert recaptcha here to prevent API abuse!!!
                     const policy_id = evt.currentTarget.dataset.policy;
@@ -477,7 +501,7 @@
                 try {
                     const payload = await window.Wallet.signData(stake_address_cbor, nonce);
                     const stake_key = CSL.Address.from_bytes(toUint8Array(stake_address_cbor));
-                    const stake_bech32 = stake_key.to_bech32('stake');
+                    const stake_bech32 = stake_key.to_bech32('{{env('CARDANO_NETWORK') === 'mainnet' ? 'stake' : 'stake_test'}}');
                     $.post('{{route('api.v1.validate-nonce')}}', {
                         event_uuid: EVENT_UUID,
                         stake_key: stake_bech32,
@@ -527,6 +551,31 @@
                         return;
                     }
 
+
+                    // Object.values(window.cardano).forEach((maybeWallet) => {
+                    //     console.log(`Maybe Wallet?`, maybeWallet);
+                    //     if (maybeWallet.name === undefined || maybeWallet.icon === undefined) {
+                    //         return;
+                    //     }
+                    //
+                    //     if (discoveredWallets[maybeWallet.name] === undefined) {
+                    //         discoveredWallets[maybeWallet.name] = maybeWallet;
+                    //     }
+                    // });
+
+                    // for (const maybeWallet in Object.keys(window.cardano)) {
+                    //     console.log(`Maybe Wallet?`, maybeWallet);
+                    //     if (maybeWallet.name === undefined || maybeWallet.icon === undefined) {
+                    //         continue;
+                    //     }
+                    //
+                    //     if (discoveredWallets[maybeWallet.name] === undefined) {
+                    //         discoveredWallets[maybeWallet.name] = maybeWallet;
+                    //     }
+                    // }
+
+                    // console.log(`Discovered Wallets:`, discoveredWallets);
+
                     if (!has_cardano) {
                         connector_section.show();
                         has_cardano = true;
@@ -541,28 +590,62 @@
                         });
                     }
 
-                    supported_wallets.forEach(function (wallet) {
-                        if (window.Wallets.includes(wallet)) {
+                    Object.keys(window.cardano).forEach((walletId) => {
+                        if (walletId === "typhon") {
+                            return;
+                        }
+                        const wallet = window.cardano[walletId];
+                        if (wallet.name === undefined || wallet.icon === undefined) {
                             return;
                         }
 
-                        if (window.cardano[wallet] === undefined) {
+                        if (
+                            wallet.experimental &&
+                            wallet.experimental.vespr_compat === true
+                        ) {
+                            return;
+                        }
+
+                        if (window.Wallets.includes(walletId)) {
                             return;
                         }
 
                         const btn = `
                             <div class="col-auto text-center">
-                                <button type="button" class="btn connect-btn" data-wallet="${wallet}">
-                                    <img src="${window.cardano[wallet].icon}" alt="${window.cardano[wallet].name}" />
+                                <button type="button" class="btn connect-btn" data-wallet="${walletId}">
+                                    <img src="${window.cardano[walletId].icon}" alt="${window.cardano[walletId].name}" />
                                 </button>
                             </div>
                         `;
 
                         wallet_holder.append(btn);
-                        window.Wallets.push(wallet);
+                        window.Wallets.push(walletId);
                     });
+
+                    // supported_wallets.forEach(function (wallet) {
+                    //     if (window.Wallets.includes(wallet)) {
+                    //         return;
+                    //     }
+                    //
+                    //     if (window.cardano[wallet] === undefined) {
+                    //         return;
+                    //     }
+                    //
+                    //     const btn = `
+                    //         <div class="col-auto text-center">
+                    //             <button type="button" class="btn connect-btn" data-wallet="${wallet}">
+                    //                 <img src="${window.cardano[wallet].icon}" alt="${window.cardano[wallet].name}" />
+                    //             </button>
+                    //         </div>
+                    //     `;
+                    //
+                    //     wallet_holder.append(btn);
+                    //     window.Wallets.push(wallet);
+                    // });
                     retries--;
                 }, 250);
+
+
             }
 
             $(document).ready(function () {

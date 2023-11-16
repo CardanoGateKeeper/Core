@@ -4,9 +4,10 @@ namespace App\Models;
 
 use App\Casts\Json;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Event extends Model
-{
+class Event extends Model {
+
     /**
      * @var string[] $fillable
      */
@@ -18,6 +19,11 @@ class Event extends Model
         'hodlAsset',
         'startDateTime',
         'endDateTime',
+        'location',
+        'eventStart',
+        'eventEnd',
+        'eventDate',
+        'image',
     ];
 
     /**
@@ -38,4 +44,30 @@ class Event extends Model
         'startDateTime',
         'endDateTime',
     ];
+
+    public function tickets(): HasMany {
+        return $this->hasMany(Ticket::class, 'eventId');
+    }
+
+    public function description() {
+        $description = "";
+        if ($this->eventDate) {
+            $description .= date('l, F jS, Y', strtotime($this->eventDate));
+        }
+
+        if ($this->eventStart && $this->eventEnd) {
+            $description .= " " . $this->eventStart . " to " . $this->eventEnd . ".";
+        } else if ($this->eventStart) {
+            $description .= " " . $this->eventStart;
+        } else if ($this->eventEnd) {
+            $description .= " until " . $this->eventEnd;
+        }
+
+        if ($this->location) {
+            $description .= " " . $this->location;
+        }
+
+        return $description;
+
+    }
 }

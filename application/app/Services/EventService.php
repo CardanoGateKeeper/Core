@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\Event;
 use App\Exceptions\AppException;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class EventService
-{
-    public function getEventList($fullInfo = false): Collection
-    {
+class EventService {
+
+    public function getEventList($fullInfo = false): Collection {
         $selectColumns = [
             'uuid',
             'name',
@@ -19,16 +18,13 @@ class EventService
         ];
 
         if ($fullInfo) {
-            $selectColumns = array_merge(
-                $selectColumns,
-                [
-                    'id',
-                    'nonceValidForMinutes',
-                    'hodlAsset',
-                    'startDateTime',
-                    'endDateTime',
-                ]
-            );
+            $selectColumns = array_merge($selectColumns, [
+                'id',
+                'nonceValidForMinutes',
+                'hodlAsset',
+                'startDateTime',
+                'endDateTime',
+            ]);
         }
 
         return Event::all($selectColumns);
@@ -37,8 +33,7 @@ class EventService
     /**
      * @throws AppException|ValidationException
      */
-    public function save(array $payload): void
-    {
+    public function save(array $payload): void {
         $event = null;
         if (!empty($payload['event_id']) && !$event = $this->findById($payload['event_id'])) {
             throw new AppException(trans('Event not found'));
@@ -47,21 +42,38 @@ class EventService
         $payload['policyIds'] = array_filter(preg_split("/\r\n|\n|\r/", $payload['policyIds']));
 
         $validationRules = [
-            'name' => ['required', 'min:3'],
-            'policyIds' => ['required', 'array', 'min:1'],
-            'endDateTime' => ['required', 'date'],
-            'startDateTime' => ['date'],
-            'hodlAsset' => ['integer'],
-            'nonceValidForMinutes' => ['required', 'integer', 'min:5']
+            'name'                 => [
+                'required',
+                'min:3',
+            ],
+            'policyIds'            => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'endDateTime'          => [
+                'required',
+                'date',
+            ],
+            'startDateTime'        => ['date'],
+            'hodlAsset'            => ['integer'],
+            'nonceValidForMinutes' => [
+                'required',
+                'integer',
+                'min:5',
+            ],
+            'location'             => ['string'],
+            'eventStart'           => ['string'],
+            'eventEnd'             => ['string'],
+            'eventDate'            => ['date'],
+            'image'                => ['string'],
         ];
 
         $validator = Validator::make($payload, $validationRules);
 
         if ($validator->fails()) {
-            throw new AppException(sprintf(
-                '%s: %s',
-                trans('validation errors'), implode(' ', $validator->errors()->all())
-            ));
+            throw new AppException(sprintf('%s: %s', trans('validation errors'), implode(' ', $validator->errors()
+                                                                                                        ->all())));
         }
 
         if (!$event) {
@@ -78,15 +90,13 @@ class EventService
         $event->save();
     }
 
-    public function findById(int $eventId): ?Event
-    {
+    public function findById(int $eventId): ?Event {
         return Event::where('id', $eventId)
-            ->first();
+                    ->first();
     }
 
-    public function findByUUID(string $uuid): ?Event
-    {
+    public function findByUUID(string $uuid): ?Event {
         return Event::where('uuid', $uuid)
-            ->first();
+                    ->first();
     }
 }
